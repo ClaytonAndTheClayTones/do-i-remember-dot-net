@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 25.0.1705.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi.csproj", "{EF275D1C-628C-46C2-A198-BD803E7DD180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{ACC88FD6-0A88-47B1-A67D-DA0FA9D1D2C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{778F75DA-4852-4897-B48F-BB697B82DA53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +13,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EF275D1C-628C-46C2-A198-BD803E7DD180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF275D1C-628C-46C2-A198-BD803E7DD180}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF275D1C-628C-46C2-A198-BD803E7DD180}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF275D1C-628C-46C2-A198-BD803E7DD180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACC88FD6-0A88-47B1-A67D-DA0FA9D1D2C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACC88FD6-0A88-47B1-A67D-DA0FA9D1D2C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACC88FD6-0A88-47B1-A67D-DA0FA9D1D2C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACC88FD6-0A88-47B1-A67D-DA0FA9D1D2C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{778F75DA-4852-4897-B48F-BB697B82DA53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{778F75DA-4852-4897-B48F-BB697B82DA53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{778F75DA-4852-4897-B48F-BB697B82DA53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{778F75DA-4852-4897-B48F-BB697B82DA53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C7FE1CEF-0D36-43C5-810B-86A1588ACF73}
+		SolutionGuid = {4C0E4E0A-16A7-47B9-9ADE-1174FFF14DFB}
 	EndGlobalSection
 EndGlobal

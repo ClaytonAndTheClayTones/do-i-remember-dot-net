@@ -18,16 +18,15 @@ var builder = WebApplication.CreateBuilder(args);
 
         // ignore omitted parameters on models to enable optional params (e.g. User update)
         x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
-    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+    }); 
     // configure strongly typed settings object
     services.Configure<DbSettings>(builder.Configuration.GetSection("DbSettings"));
 
     // configure DI for application services
     services.AddSingleton<DataContext>();
-    services.AddScoped<IUserRepository, UserRepository>();
-    services.AddScoped<IUserService, UserService>();
+    services.AddScoped<ILabelService, LabelService>();
+    services.AddScoped<ILabelAccessor, LabelAccessor>();
+    services.AddScoped<IDbUtils, DbUtils>();
 }
 
 var app = builder.Build();

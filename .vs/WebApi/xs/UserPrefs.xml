@@ -1,3 +1,24 @@
-﻿<Properties StartupConfiguration="{EF275D1C-628C-46C2-A198-BD803E7DD180}|Default">
+﻿<Properties StartupConfiguration="{ACC88FD6-0A88-47B1-A67D-DA0FA9D1D2C9}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="appsettings.json">
+    <Files>
+      <File FileName="appsettings.json" Line="14" Column="2" />
+      <File FileName="Program.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="WebApi" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.WebApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <DisabledProjects>
+    <String>WebApi.csproj</String>
+    <String>../UnitTest/UnitTest.csproj</String>
+  </DisabledProjects>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints />
 </Properties>

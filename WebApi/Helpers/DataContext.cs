@@ -44,21 +44,20 @@ public class DataContext
     {
         // create tables if they don't exist
         using var connection = CreateConnection();
-        await _initUsers();
+        await _initLabels();
 
-        async Task _initUsers()
+        async Task _initLabels()
         {
             var sql = """
-                CREATE TABLE IF NOT EXISTS Users (
-                    Id SERIAL PRIMARY KEY,
-                    Title VARCHAR,
-                    FirstName VARCHAR,
-                    LastName VARCHAR,
-                    Email VARCHAR,
-                    Role INTEGER,
-                    PasswordHash VARCHAR
+                CREATE TABLE IF NOT EXISTS labels (
+                    id UUID PRIMARY KEY, 
+                    name TEXT NOT NULL,
+                    city TEXT,
+                    state TEXT
                 );
             """;
+
+
             await connection.ExecuteAsync(sql);
         }
     }
