@@ -3,50 +3,90 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Labels;
 using WebApi.Services;
+using WebApi.Adapters;
+using System.Linq;
+using System.Reflection.Emit;
 
 [ApiController]
 [Route("[controller]")]
 public class LabelsController : ControllerBase
 {
     private ILabelService _labelService;
+    private ILabelAdapter _labelAdapter;
 
-    public LabelsController(ILabelService labelService)
+    public LabelsController(ILabelService labelService, ILabelAdapter labelAdapter)
     { 
-        _labelService = labelService; 
+        _labelService = labelService;
+        _labelAdapter = labelAdapter;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Search(SearchLabelRequest model)
+    public async Task<IActionResult> Search(string? ids, string? nameLike, string? city, string? state)
     {
-        var labels = await _labelService.Search(model);
-        return Ok(labels);
+        SearchLabelRequest searchLabelRequest = this._labelAdapter.convertFromRequestToSearchModel(ids, nameLike, city, state);
+
+        IEnumerable<LabelModel> labels = await _labelService.Search(searchLabelRequest);
+
+        IEnumerable<LabelResponseModel> responseLabels = labels.Select(x =>
+        {
+            return _labelAdapter.convertFromModelToResponseModel(x);
+        });
+
+        return Ok(responseLabels);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(string id)
+    public async Task<IActionResult> GetById(Guid id)
     {
-        var label = await _labelService.GetById(id);
-        return Ok(label);
+        LabelModel label = await _labelService.GetById(id);
+
+        if (label == null)
+        {
+            return NotFound();
+        }
+
+        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+
+        return Ok(responseLabel);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateLabelRequest model)
     {
-        await _labelService.Create(model);
-        return Ok(new { message = "Label created" });
+        LabelModel label = await _labelService.Create(model);
+         
+        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+
+        return Ok(responseLabel);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, UpdateLabelRequest model)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Update(Guid id, UpdateLabelRequest model)
     {
-        await _labelService.Update(id, model);
-        return Ok(new { message = "Label updated" });
+        LabelModel label = await _labelService.Update(id, model);
+
+        if (label == null)
+        {
+            return NotFound();
+        }
+
+        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+
+        return Ok(responseLabel);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(Guid id)
     {
-        await _labelService.Delete(id);
-        return Ok(new { message = "Label deleted" });
+        LabelModel label = await _labelService.Delete(id);
+
+        if(label == null)
+        {
+            return NotFound();
+        }
+
+        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+
+        return Ok(responseLabel);
     }
 }

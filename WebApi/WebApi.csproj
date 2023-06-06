@@ -21,8 +21,12 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="Database\" />
+      <None Remove="Validators\" />
+      <None Remove="Common\" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Database\" />
+      <Folder Include="Validators\" />
+      <Folder Include="Common\" />
     </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using WebApi.Helpers;
-using WebApi.Repositories;
+using WebApi.Accessors;
+using WebApi.Adapters;
+using WebApi.Helpers; 
 using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,9 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddSingleton<DataContext>();
     services.AddScoped<ILabelService, LabelService>();
     services.AddScoped<ILabelAccessor, LabelAccessor>();
+    services.AddScoped<ILabelAdapter, LabelAdapter>();
     services.AddScoped<IDbUtils, DbUtils>();
+    services.AddScoped<ICommonUtils, CommonUtils>();
 }
 
 var app = builder.Build();

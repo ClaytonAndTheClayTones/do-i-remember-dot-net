@@ -1,4 +1,4 @@
-namespace WebApi.Repositories;
+namespace WebApi.Accessors;
 
 using Dapper; 
 using WebApi.Helpers;
@@ -6,11 +6,11 @@ using WebApi.Models.Labels;
 
 public interface ILabelAccessor
 {
-    Task<IEnumerable<LabelModel>> Search(SearchLabelRequest searchModel);
-    Task<LabelModel> GetById(string id); 
-    Task Create(CreateLabelRequest label);
-    Task Update(string id, UpdateLabelRequest label);
-    Task Delete(string id);
+    Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel);
+    Task<LabelModel> GetById(Guid id); 
+    Task<LabelModel> Create(CreateLabelRequest label);
+    Task<LabelModel> Update(Guid id, UpdateLabelRequest label);
+    Task<LabelModel> Delete(Guid id);
 }
 
 public class LabelAccessor : ILabelAccessor
@@ -24,73 +24,77 @@ public class LabelAccessor : ILabelAccessor
         _dbUtils = dbUtils; 
     }
 
-    public async Task<IEnumerable<LabelModel>> Search(SearchLabelRequest searchModel)
+    public async Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel)
     {
         using var connection = _context.CreateConnection();
         var sql = """
-            SELECT * FROM labels
+            SELECT * FROM labels;
         """;
         return await connection.QueryAsync<LabelModel>(sql);
     }
 
-    public async Task<LabelModel> GetById(string id)
+    public async Task<LabelModel> GetById(Guid id)
     {
         using var connection = _context.CreateConnection();
         var sql = """
             SELECT * FROM labels 
             WHERE id = @id
         """;
-        return await connection.QuerySingleOrDefaultAsync<LabelModel>(sql, new { id = id });
+
+        LabelModel result =  await connection.QuerySingleOrDefaultAsync<LabelModel>(sql, new { id = id });
+
+        return result;
     }
   
-    public async Task Create(CreateLabelRequest label)
+    public async Task<LabelModel> Create(CreateLabelRequest label)
     {
         using var connection = _context.CreateConnection();
         var sql = """
             INSERT INTO labels (name, city, state)
             VALUES (@name, @city, @state)
+            RETURNING *
         """;
         
-        await connection.ExecuteAsync(sql, new {
+        var result = await connection.QuerySingleAsync<LabelModel>(sql, new {
             name = label.Name, city = label.City, state = label.State
         });
+
+        return result;
     }
 
-    public async Task Update(string id, UpdateLabelRequest label)
+    public async Task<LabelModel> Update(Guid id, UpdateLabelRequest label)
     {
         using var connection = _context.CreateConnection();
-
-        Dictionary<string, object?> queryDict = new Dictionary<string, object?>()
-        {
-            { "name", label.Name },
-            { "city", label.City },
-            { "state", label.State }
-        };
          
-        this._dbUtils.BuildUpdateQuery("labels", queryDict);
-
-        var sql = $"""
-            UPDATE labels 
-            SET {(label.Name != null ? "name = @name" : "")},
-                {(label.City != null ? "city = @city" : "")},
-                {(label.State != null ? "state = @state" : "")} 
-            WHERE id = @id
-        """;
-         
-        await connection.ExecuteAsync(sql, new
+        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("labels", id, new
         {
-            id=id,
-            name = label.Name 
+            name = label.Name,
+            city = label.City,
+            state = label.State
         });
+
+        if(updateQuery == null)
+        {
+            return await GetById(id);
+        }
+          
+        var result = await connection.QuerySingleOrDefaultAsync<LabelModel>(updateQuery.sql, updateQuery.parameters);
+
+        return result;
     }
 
-    public async Task Delete(string id)
+    public async Task<LabelModel> Delete(Guid id)
     {
         using var connection = _context.CreateConnection();
+
         var sql = """
             DELETE FROM labels 
             WHERE Id = @id
+            RETURNING *
         """;
-        await connection.ExecuteAsync(sql, new { id });
+
+        var result = await connection.QuerySingleOrDefaultAsync<LabelModel>(sql, new { id });
+
+        return result;
     }
 }

@@ -49,8 +49,10 @@ public class DataContext
         async Task _initLabels()
         {
             var sql = """
+                CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
                 CREATE TABLE IF NOT EXISTS labels (
-                    id UUID PRIMARY KEY, 
+                    id uuid NOT NULL DEFAULT uuid_generate_v4(), 
                     name TEXT NOT NULL,
                     city TEXT,
                     state TEXT
