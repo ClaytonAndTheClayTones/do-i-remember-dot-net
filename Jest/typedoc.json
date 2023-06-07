@@ -1,0 +1,9 @@
+{
+  "readme": "none",
+  "name": "Veho Quality Development Kit",
+  "entryPoints": ["./"],
+  "exclude": ["test/"],
+  "excludeExternals": true,
+  "sourceLinkTemplate": "https://github.com/veho-technologies/veho-quality-development-kit/blob/main/{path}#L{line}",
+  "internalModule": "Internal"
+}

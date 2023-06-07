@@ -1,0 +1,14 @@
+overwrite: true
+documents: null
+config:
+  gqlImport: graphql-request#gql
+generates:
+  qdk/types/graphql.ts:
+    schema:
+      - 'schemas/awsAppSyncDirectives.graphql'
+      - 'schema.graphql'
+    plugins:
+      - add:
+          content: '/* eslint-disable */'
+      - 'typescript'
+      - 'typescript-resolvers'
