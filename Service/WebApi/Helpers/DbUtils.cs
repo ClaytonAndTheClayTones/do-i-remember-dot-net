@@ -146,8 +146,8 @@ namespace WebApi.Helpers
 
     public interface IDbUtils
     {
-        UpdateQueryPackage? BuildUpdateQuery(string tableName, Guid id, object udpateObject);
-        SelectQueryPackage? BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms);
+        UpdateQueryPackage? BuildUpdateQuery(string tableName, Guid id, object updateObject);
+        SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms);
     }
 
     public class UpdateQueryPackage
@@ -182,7 +182,7 @@ namespace WebApi.Helpers
         {
         }
 
-        public SelectQueryPackage? BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms)
+        public SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms)
         {
             string query = $"SELECT * FROM {tableName}";
 
@@ -190,7 +190,6 @@ namespace WebApi.Helpers
 
             if (searchTerms.Count > 0)
             {
-
                 query += "\nWHERE";
 
                 int paramCount = 0;
@@ -199,7 +198,7 @@ namespace WebApi.Helpers
                 {
                     ClauseAndParameters clauseAndParameters = x.GenerateClauseAndParameters();
 
-                    query += $"{(paramCount++ > 0 ? "," : "")}{"\n"}{clauseAndParameters.Clause}";
+                    query += $"{(paramCount++ > 0 ? " AND" : "")}{"\n"}{clauseAndParameters.Clause}";
 
                     foreach (string parameterName in clauseAndParameters.Parameters.ParameterNames)
                     {

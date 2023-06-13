@@ -15,13 +15,24 @@ public class LabelsController : ControllerBase
     private ILabelAdapter _labelAdapter;
 
     public LabelsController(ILabelService labelService, ILabelAdapter labelAdapter)
-    { 
+    {
         _labelService = labelService;
         _labelAdapter = labelAdapter;
     }
 
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateLabelRequest model)
+    {
+        LabelModel label = await _labelService.Create(model);
+
+        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+
+        return StatusCode(201, responseLabel);
+    }
+
     [HttpGet]
-    public async Task<IActionResult> Search(string? ids, string? nameLike, string? city, string? state)
+    public async Task<IActionResult> Search([FromQuery] string? ids, [FromQuery] string? nameLike, [FromQuery] string? city, [FromQuery] string? state)
     {
         SearchLabelRequest searchLabelRequest = this._labelAdapter.convertFromRequestToSearchModel(ids, nameLike, city, state);
 
@@ -38,7 +49,7 @@ public class LabelsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        LabelModel label = await _labelService.GetById(id);
+        LabelModel? label = await _labelService.GetById(id);
 
         if (label == null)
         {
@@ -50,20 +61,10 @@ public class LabelsController : ControllerBase
         return Ok(responseLabel);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateLabelRequest model)
-    {
-        LabelModel label = await _labelService.Create(model);
-         
-        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
-
-        return Ok(responseLabel);
-    }
-
     [HttpPatch("{id}")]
     public async Task<IActionResult> Update(Guid id, UpdateLabelRequest model)
     {
-        LabelModel label = await _labelService.Update(id, model);
+        LabelModel? label = await _labelService.Update(id, model);
 
         if (label == null)
         {
@@ -78,9 +79,9 @@ public class LabelsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        LabelModel label = await _labelService.Delete(id);
+        LabelModel? label = await _labelService.Delete(id);
 
-        if(label == null)
+        if (label == null)
         {
             return NotFound();
         }

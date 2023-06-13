@@ -4,17 +4,18 @@ module.exports = {
   transform: {
     '^.+\\.(ts)$': 'ts-jest',
   },
-  transformIgnorePatterns: ['node_modules/(?!@veho/.*)'],
+  transformIgnorePatterns: ['node_modules/'],
   reporters: ['default'],
   globals: {
     RELEASE: 'test',
   },
-  setupFilesAfterEnv: ['./src/jestSetup.ts', 'jest-expect-message'],
+  preset: "ts-jest",
+  setupFilesAfterEnv: ['./QDK/customMatchers.ts'],
   clearMocks: true,
   collectCoverage: true,
   coverageReporters: ['json', 'lcov', 'clover', 'cobertura', 'text'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['/node_modules/'],
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.test.ts'],
-  testTimeout: 5000,
+  testTimeout: 30000  
 }

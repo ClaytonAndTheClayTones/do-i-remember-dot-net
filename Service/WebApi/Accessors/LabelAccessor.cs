@@ -1,39 +1,55 @@
 namespace WebApi.Accessors;
 
-using Dapper; 
+using Dapper;
 using WebApi.Helpers;
 using WebApi.Models.Labels;
+using WebApi.Adapters;
+using System.Linq;
+using System.Collections.Generic;
 
 public interface ILabelAccessor
 {
     Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel);
-    Task<LabelModel> GetById(Guid id); 
+    Task<LabelModel?> GetById(Guid id);
     Task<LabelModel> Create(CreateLabelRequest label);
-    Task<LabelModel> Update(Guid id, UpdateLabelRequest label);
-    Task<LabelModel> Delete(Guid id);
+    Task<LabelModel?> Update(Guid id, UpdateLabelRequest label);
+    Task<LabelModel?> Delete(Guid id);
 }
 
 public class LabelAccessor : ILabelAccessor
 {
     private DataContext _context;
     private IDbUtils _dbUtils;
+    private ILabelAdapter _labelAdapter;
 
-    public LabelAccessor(DataContext context, IDbUtils dbUtils)
-    { 
+    public LabelAccessor(DataContext context, IDbUtils dbUtils, ILabelAdapter labelAdapter)
+    {
         _context = context;
-        _dbUtils = dbUtils; 
+        _dbUtils = dbUtils;
+        _labelAdapter = labelAdapter;
     }
 
     public async Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel)
     {
         using var connection = _context.CreateConnection();
-        var sql = """
-            SELECT * FROM labels;
-        """;
-        return await connection.QueryAsync<LabelModel>(sql);
+
+        List<ISearchTerm> searchTerms = this._labelAdapter.convertFromSearchModelToSearchTerms(searchModel);
+
+        var queryPackage = this._dbUtils.BuildSelectQuery("labels", searchTerms);
+
+        var results = await connection.QueryAsync<LabelDatabaseModel>(queryPackage.sql, queryPackage.parameters);
+
+        List<LabelModel> labelModels = new List<LabelModel>();
+
+        foreach (LabelDatabaseModel dbModel in results)
+        {
+            labelModels.Add(_labelAdapter.convertFromDatabaseModelToModel(dbModel));
+        }
+
+        return labelModels;
     }
 
-    public async Task<LabelModel> GetById(Guid id)
+    public async Task<LabelModel?> GetById(Guid id)
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -41,31 +57,53 @@ public class LabelAccessor : ILabelAccessor
             WHERE id = @id
         """;
 
-        LabelModel result =  await connection.QuerySingleOrDefaultAsync<LabelModel>(sql, new { id = id });
+        LabelDatabaseModel result = await connection.QuerySingleOrDefaultAsync<LabelDatabaseModel>(sql, new { id = id });
+        if (result != null)
+        {
+            var model = this._labelAdapter.convertFromDatabaseModelToModel(result);
 
-        return result;
+            return model;
+        }
+        else
+        {
+            return null;
+        }
     }
-  
+
     public async Task<LabelModel> Create(CreateLabelRequest label)
     {
-        using var connection = _context.CreateConnection();
-        var sql = """
+
+        try
+        {
+            using var connection = _context.CreateConnection();
+            var sql = """
             INSERT INTO labels (name, city, state)
             VALUES (@name, @city, @state)
             RETURNING *
         """;
-        
-        var result = await connection.QuerySingleAsync<LabelModel>(sql, new {
-            name = label.Name, city = label.City, state = label.State
-        });
 
-        return result;
+
+            var result = await connection.QuerySingleAsync<LabelDatabaseModel>(sql, new
+            {
+                name = label.Name,
+                city = label.City,
+                state = label.State
+            });
+
+            var model = this._labelAdapter.convertFromDatabaseModelToModel(result);
+
+            return model;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
-    public async Task<LabelModel> Update(Guid id, UpdateLabelRequest label)
+    public async Task<LabelModel?> Update(Guid id, UpdateLabelRequest label)
     {
         using var connection = _context.CreateConnection();
-         
+
         UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("labels", id, new
         {
             name = label.Name,
@@ -73,17 +111,26 @@ public class LabelAccessor : ILabelAccessor
             state = label.State
         });
 
-        if(updateQuery == null)
+        if (updateQuery == null)
         {
             return await GetById(id);
         }
-          
-        var result = await connection.QuerySingleOrDefaultAsync<LabelModel>(updateQuery.sql, updateQuery.parameters);
 
-        return result;
+        var result = await connection.QuerySingleOrDefaultAsync<LabelDatabaseModel>(updateQuery.sql, updateQuery.parameters);
+
+        if (result != null)
+        {
+            var model = this._labelAdapter.convertFromDatabaseModelToModel(result);
+
+            return model;
+        }
+        else
+        {
+            return null;
+        }
     }
 
-    public async Task<LabelModel> Delete(Guid id)
+    public async Task<LabelModel?> Delete(Guid id)
     {
         using var connection = _context.CreateConnection();
 
@@ -93,8 +140,17 @@ public class LabelAccessor : ILabelAccessor
             RETURNING *
         """;
 
-        var result = await connection.QuerySingleOrDefaultAsync<LabelModel>(sql, new { id });
+        var result = await connection.QuerySingleOrDefaultAsync<LabelDatabaseModel>(sql, new { id });
 
-        return result;
+        if (result != null)
+        {
+            var model = this._labelAdapter.convertFromDatabaseModelToModel(result);
+
+            return model;
+        }
+        else
+        {
+            return null;
+        }
     }
 }

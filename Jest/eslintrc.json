@@ -1,0 +1,177 @@
+{
+    "env": {
+      "jest": true,
+      "node": true
+    },
+    "root": true,
+    "plugins": [
+      "@typescript-eslint",
+      "import",
+      "prettier",
+      "simple-import-sort"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module",
+      "project": "./tsconfig.dev.json"
+    },
+    "extends": [
+      "plugin:import/typescript",
+      "prettier",
+      "plugin:prettier/recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "settings": {
+      "import/parsers": {
+        "@typescript-eslint/parser": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      "import/resolver": {
+        "node": {},
+        "typescript": {
+          "project": "./tsconfig.dev.json",
+          "alwaysTryTypes": true
+        }
+      }
+    },
+    "ignorePatterns": [
+      "*.js",
+      "!.projenrc.ts",
+      "*.d.ts",
+      "node_modules/",
+      "*.generated.ts",
+      "coverage",
+      "!.projenrc.ts",
+      "!projenrc/**/*.ts",
+      "src/validation-tests"
+    ],
+    "rules": { 
+      "jest/valid-expect": [
+        "error",
+        {
+          "maxArgs": 2
+        }
+      ],
+      "prettier/prettier": [
+        "error"
+      ],
+      "@typescript-eslint/no-require-imports": [
+        "error"
+      ],
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/test/**",
+            "**/build-tools/**",
+            "**/projenrc/**",
+            ".projenrc.ts",
+            "projenrc/**/*.ts",
+            "**/?(*.)+(spec|test).+(ts|tsx|js)",
+            "**/tests/**"
+          ],
+          "optionalDependencies": false,
+          "peerDependencies": true
+        }
+      ],
+      "import/no-unresolved": [
+        "off"
+      ],
+      "import/order": [
+        "off"
+      ],
+      "no-duplicate-imports": [
+        "error"
+      ],
+      "no-shadow": [
+        "off"
+      ],
+      "@typescript-eslint/no-shadow": [
+        "warn"
+      ],
+      "key-spacing": [
+        "error"
+      ],
+      "no-multiple-empty-lines": [
+        "error"
+      ],
+      "@typescript-eslint/no-floating-promises": [
+        "error"
+      ],
+      "no-return-await": [
+        "off"
+      ],
+      "@typescript-eslint/return-await": [
+        "warn"
+      ],
+      "no-trailing-spaces": [
+        "error"
+      ],
+      "dot-notation": [
+        "error"
+      ],
+      "no-bitwise": [
+        "error"
+      ],
+      "@typescript-eslint/member-ordering": [
+        "error",
+        {
+          "default": [
+            "public-static-field",
+            "public-static-method",
+            "protected-static-field",
+            "protected-static-method",
+            "private-static-field",
+            "private-static-method",
+            "field",
+            "constructor",
+            "method"
+          ]
+        }
+      ],
+      "semi": [
+        "off"
+      ],
+      "@typescript-eslint/consistent-type-imports": [
+        "off"
+      ],
+      "simple-import-sort/imports": [
+        "error"
+      ],
+      "simple-import-sort/exports": [
+        "error"
+      ],
+      "@typescript-eslint/no-misused-promises": [
+        "error"
+      ],
+      "@typescript-eslint/no-explicit-any": [
+        "off"
+      ],
+      "@typescript-eslint/no-non-null-assertion": [
+        "off"
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          ".projenrc.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/no-require-imports": "off",
+          "import/no-extraneous-dependencies": "off"
+        }
+      },
+      {
+        "files": [
+          "**/*.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/no-explicit-any": "off"
+        }
+      }
+    ]
+  }
+  

@@ -9,10 +9,10 @@ using WebApi.Accessors;
 public interface ILabelService
 {
     Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel);
-    Task<LabelModel> GetById(Guid id);
+    Task<LabelModel?> GetById(Guid id);
     Task<LabelModel> Create(CreateLabelRequest model);
-    Task<LabelModel> Update(Guid id, UpdateLabelRequest model);
-    Task<LabelModel> Delete(Guid id);
+    Task<LabelModel?> Update(Guid id, UpdateLabelRequest model);
+    Task<LabelModel?> Delete(Guid id);
 }
 
 public class LabelService : ILabelService
@@ -29,7 +29,7 @@ public class LabelService : ILabelService
         return await _labelAccessor.Search(searchModel);
     }
 
-    public async Task<LabelModel> GetById(Guid id)
+    public async Task<LabelModel?> GetById(Guid id)
     {
         var label = await this._labelAccessor.GetById(id);
 
@@ -47,13 +47,13 @@ public class LabelService : ILabelService
         return await _labelAccessor.Create(model);
     }
 
-    public async Task<LabelModel> Update(Guid id, UpdateLabelRequest model)
+    public async Task<LabelModel?> Update(Guid id, UpdateLabelRequest model)
     {  
         // save label
         return await this._labelAccessor.Update(id, model);
     }
 
-    public async Task<LabelModel> Delete(Guid id)
+    public async Task<LabelModel?> Delete(Guid id)
     {
         return await this._labelAccessor.Delete(id);
     }

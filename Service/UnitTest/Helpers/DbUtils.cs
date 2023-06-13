@@ -103,9 +103,9 @@ public class BuildSelectQuery
         // Arrange 
         string expectedQuery = "SELECT * FROM test_table\n" +
             "WHERE\n" +
-            "column1 = @column1,\n" +
-            "column2 LIKE @column2,\n" +
-            "column3 = @column3,\n" +
+            "column1 = @column1 AND\n" +
+            "column2 LIKE @column2 AND\n" +
+            "column3 = @column3 AND\n" +
             "column4 IN (\n" +
             "@column4_0,\n" +
             "@column4_1,\n" +

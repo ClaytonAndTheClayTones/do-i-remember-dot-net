@@ -1,5 +1,3 @@
-namespace WebApi.Helpers;
-
 public class DbSettings
 {
     public string? Server { get; set; }
