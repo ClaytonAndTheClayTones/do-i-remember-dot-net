@@ -32,17 +32,17 @@ describe('Patch Label Tests', () => {
     const createdLabel = await createLabel(context, {}, entityMap)
 
     const updateModel : LabelUpdateModel = {
-      name: "updateName" + generate(10),
-      city: "updateCity",
-      state: "updateState"
+      Name: "updateName" + generate(10),
+      City: "updateCity",
+      State: "updateState"
     }
 
-    const updatedLabel = await updateLabel(context, createdLabel.data.id, updateModel, undefined, false)
+    const updatedLabel = await updateLabel(context, createdLabel.data.Id, updateModel, undefined, false)
 
-    expect(updatedLabel.data).toHaveSamePropertiesAs(updateModel, ["id","createdAt", "updatedAt"]);
-    expect(updatedLabel.data.id).toEqual(createdLabel.data.id);
-    expect(updatedLabel.data.createdAt).toEqual(createdLabel.data.createdAt);
-    expect(updatedLabel.data.updatedAt).toBeTruthy();
+    expect(updatedLabel.data).toHaveSamePropertiesAs(updateModel, ["Id", "CreatedAt", "UpdatedAt"]);
+    expect(updatedLabel.data.Id).toEqual(createdLabel.data.Id);
+    expect(updatedLabel.data.CreatedAt).toEqual(createdLabel.data.CreatedAt);
+    expect(updatedLabel.data.UpdatedAt).toBeTruthy();
   }) 
 })
 

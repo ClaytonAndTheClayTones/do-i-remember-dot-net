@@ -7,8 +7,8 @@ using WebApi.Helpers;
 public interface ILabelAdapter
 {
     LabelResponseModel convertFromModelToResponseModel(LabelModel model);
-    SearchLabelRequest convertFromRequestToSearchModel(string? ids, string? nameLike, string? city, string? state);
-    List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLabelRequest? model);
+    SearchLabelModel convertFromRequestToSearchModel(SearchLabelRequest request);
+    List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLabelModel? model);
     LabelModel convertFromDatabaseModelToModel(LabelDatabaseModel model);
 }
 
@@ -29,7 +29,7 @@ public class LabelAdapter : ILabelAdapter
             city: model.City,
             state: model.State,
             createdAt: model.CreatedAt.ToString("s"),
-            updatedAt: $"{model.UpdatedAt:s}"
+            updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
         );
 
         return responseModel;
@@ -50,23 +50,23 @@ public class LabelAdapter : ILabelAdapter
         return responseModel;
     }
 
-    public SearchLabelRequest convertFromRequestToSearchModel(string? ids, string? nameLike, string? city, string? state)
+    public SearchLabelModel convertFromRequestToSearchModel(SearchLabelRequest request)
     {
-        SearchLabelRequest result = new SearchLabelRequest();
+        SearchLabelModel result = new SearchLabelModel();
 
-        if (ids != null)
+        if (request.Ids != null)
         {
-            result.Ids = this._commonUtils.ConvertDelimitedStringToGuidList(ids);
+            result.Ids = this._commonUtils.ConvertDelimitedStringToGuidList(request.Ids);
         }
 
-        result.NameLike = nameLike;
-        result.City = city;
-        result.State = state;
+        result.NameLike = request.NameLike;
+        result.City = request.City;
+        result.State = request.State;
 
         return result;
     }
 
-    public List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLabelRequest? model)
+    public List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLabelModel? model)
     {
         List<ISearchTerm> searchTerms = new List<ISearchTerm>();
 
@@ -84,17 +84,15 @@ public class LabelAdapter : ILabelAdapter
 
             if (model.City != null)
             {
-                searchTerms.Add(new ExactMatchSearchTerm<string>("city", model.City));
+                searchTerms.Add(new ExactMatchSearchTerm<string>("city", model.City, true));
             }
 
             if (model.State != null)
             {
-                searchTerms.Add(new ExactMatchSearchTerm<string>("state", model.State));
+                searchTerms.Add(new ExactMatchSearchTerm<string>("state", model.State, true));
             }
         }
 
         return searchTerms;
     }
-
-
 }

@@ -32,11 +32,14 @@ public class LabelsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Search([FromQuery] string? ids, [FromQuery] string? nameLike, [FromQuery] string? city, [FromQuery] string? state)
+    public async Task<IActionResult> Search(
+        [FromQuery]
+        SearchLabelRequest request
+    )
     {
-        SearchLabelRequest searchLabelRequest = this._labelAdapter.convertFromRequestToSearchModel(ids, nameLike, city, state);
+        SearchLabelModel searchLabelModel = this._labelAdapter.convertFromRequestToSearchModel(request);
 
-        IEnumerable<LabelModel> labels = await _labelService.Search(searchLabelRequest);
+        IEnumerable<LabelModel> labels = await _labelService.Search(searchLabelModel);
 
         IEnumerable<LabelResponseModel> responseLabels = labels.Select(x =>
         {

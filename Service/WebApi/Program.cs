@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 using WebApi.Accessors;
 using WebApi.Adapters;
-using WebApi.Helpers; 
+using WebApi.Helpers;
 using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 {
     var services = builder.Services;
     var env = builder.Environment;
- 
+
     services.AddCors();
     services.AddControllers().AddJsonOptions(x =>
     {
@@ -19,7 +20,9 @@ var builder = WebApplication.CreateBuilder(args);
 
         // ignore omitted parameters on models to enable optional params (e.g. User update)
         x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    }); 
+        x.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
+
     // configure strongly typed settings object
     services.Configure<DbSettings>(builder.Configuration.GetSection("DbSettings"));
 

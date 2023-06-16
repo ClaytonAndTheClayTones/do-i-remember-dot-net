@@ -30,7 +30,7 @@ describe('Get Label Tests', () => {
   it('Gets a posted label by id', async () => {
     //just call with default values
     const labelResult = await createLabel(context, {}, entityMap)
-    const labelRetrieved = await getLabelById(context, labelResult.data.id);
+    const labelRetrieved = await getLabelById(context, labelResult.data.Id);
 
     expect(labelRetrieved.status).toEqual(200)
     expect(labelRetrieved.data).toHaveSamePropertiesAs(labelResult.data);
@@ -50,7 +50,7 @@ describe('Get Label Tests', () => {
     const labelResult3 = await createLabel(context, {}, entityMap) 
 
     const searchModel : LabelSearchModel = {
-      ids: [labelResult1.data.id, labelResult3.data.id]
+      Ids: [labelResult1.data.Id, labelResult3.data.Id]
     }
 
     const labelsRetrieved = await searchLabels(context, searchModel); 
@@ -67,13 +67,57 @@ describe('Get Label Tests', () => {
     //just call with default values
 
     const randomstring = generate(10);
-    const labelResult1 = await createLabel(context, {name: "testVal_" + randomstring}, entityMap)
-    const labelResult2 = await createLabel(context, {name: "Anothertest_" + randomstring}, entityMap)
-    const labelResult3 = await createLabel(context, {name: "NoMatch_" + randomstring}, entityMap) 
+    const labelResult1 = await createLabel(context, {Name: "testVal_" + randomstring}, entityMap)
+    const labelResult2 = await createLabel(context, {Name: "AnotherTest_" + randomstring}, entityMap)
+    const labelResult3 = await createLabel(context, {Name: "NoMatch_" + randomstring}, entityMap) 
 
     const searchModel : LabelSearchModel = {
-      ids: [labelResult1.data.id, labelResult2.data.id, labelResult3.data.id],
-      nameLike: "test"
+      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id],
+      NameLike: "test"
+    }
+
+    const labelsRetrieved = await searchLabels(context, searchModel); 
+
+    expect(labelsRetrieved.status).toEqual(200);
+
+    expect(labelsRetrieved.data.length).toEqual(2);
+
+    expect(labelsRetrieved.data[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrieved.data[1]).toHaveSamePropertiesAs(labelResult2.data); 
+  }) 
+
+  it('Gets labels with city filter', async () => {
+    //just call with default values
+ 
+    const labelResult1 = await createLabel(context, {City: "BeefTown"}, entityMap)
+    const labelResult2 = await createLabel(context, {City: "NOT BEEF TOWN"}, entityMap)
+    const labelResult3 = await createLabel(context, {City: "beefTown"}, entityMap) 
+
+    const searchModel : LabelSearchModel = {
+      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id],
+      City: "BeefTown"
+    }
+
+    const labelsRetrieved = await searchLabels(context, searchModel); 
+
+    expect(labelsRetrieved.status).toEqual(200);
+
+    expect(labelsRetrieved.data.length).toEqual(2);
+
+    expect(labelsRetrieved.data[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrieved.data[1]).toHaveSamePropertiesAs(labelResult3.data); 
+  }) 
+
+  it('Gets labels with state filter', async () => {
+    //just call with default values
+ 
+    const labelResult1 = await createLabel(context, {State: "The State Of Beef"}, entityMap)
+    const labelResult2 = await createLabel(context, {State: "thE StaTe of BEEF"}, entityMap)
+    const labelResult3 = await createLabel(context, {State: "THE STATE OF PORK"}, entityMap) 
+
+    const searchModel : LabelSearchModel = {
+      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id],
+      State: "thE StaTe of BEEF"
     }
 
     const labelsRetrieved = await searchLabels(context, searchModel); 

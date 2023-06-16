@@ -29,8 +29,8 @@ describe('Delete Label Tests', () => {
   it('deletes a posted label by id', async () => {
     //just call with default values
     const labelResult = await createLabel(context, {}, entityMap)
-    const labelDeleted = await deleteLabel(context, labelResult.data.id);
-    const deletedLabelRetrieved = await getLabelById(context, labelResult.data.id, undefined, true);
+    const labelDeleted = await deleteLabel(context, labelResult.data.Id);
+    const deletedLabelRetrieved = await getLabelById(context, labelResult.data.Id, undefined, true);
 
     expect(labelDeleted.status).toEqual(200)
     expect(labelDeleted.data).toHaveSamePropertiesAs(labelResult.data);    

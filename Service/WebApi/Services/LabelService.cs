@@ -1,14 +1,14 @@
 namespace WebApi.Services;
 
 using AutoMapper;
-using BCrypt.Net; 
+using BCrypt.Net;
 using WebApi.Helpers;
 using WebApi.Models.Labels;
 using WebApi.Accessors;
 
 public interface ILabelService
 {
-    Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel);
+    Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel);
     Task<LabelModel?> GetById(Guid id);
     Task<LabelModel> Create(CreateLabelRequest model);
     Task<LabelModel?> Update(Guid id, UpdateLabelRequest model);
@@ -17,14 +17,14 @@ public interface ILabelService
 
 public class LabelService : ILabelService
 {
-    private ILabelAccessor _labelAccessor; 
+    private ILabelAccessor _labelAccessor;
 
     public LabelService(ILabelAccessor labelAccessor)
     {
-        _labelAccessor = labelAccessor; 
+        _labelAccessor = labelAccessor;
     }
 
-    public async Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel)
+    public async Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel)
     {
         return await _labelAccessor.Search(searchModel);
     }
@@ -42,13 +42,13 @@ public class LabelService : ILabelService
     }
 
     public async Task<LabelModel> Create(CreateLabelRequest model)
-    {  
+    {
         // save label
         return await _labelAccessor.Create(model);
     }
 
     public async Task<LabelModel?> Update(Guid id, UpdateLabelRequest model)
-    {  
+    {
         // save label
         return await this._labelAccessor.Update(id, model);
     }

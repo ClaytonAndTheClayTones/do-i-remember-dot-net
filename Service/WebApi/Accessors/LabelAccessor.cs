@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 public interface ILabelAccessor
 {
-    Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel);
+    Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel);
     Task<LabelModel?> GetById(Guid id);
     Task<LabelModel> Create(CreateLabelRequest label);
     Task<LabelModel?> Update(Guid id, UpdateLabelRequest label);
@@ -29,7 +29,7 @@ public class LabelAccessor : ILabelAccessor
         _labelAdapter = labelAdapter;
     }
 
-    public async Task<IEnumerable<LabelModel>> Search(SearchLabelRequest? searchModel)
+    public async Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel)
     {
         using var connection = _context.CreateConnection();
 

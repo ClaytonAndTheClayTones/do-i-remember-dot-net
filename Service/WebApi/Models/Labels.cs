@@ -26,16 +26,27 @@ public class UpdateLabelRequest
 [BindProperties]
 public class SearchLabelRequest
 {
-    [FromQuery(Name = "ids")]
-    public List<Guid>? Ids { get; set; }
+    [FromQuery]
+    public string? Ids { get; set; }
 
-    [FromQuery(Name = "nameLike")]
+    [FromQuery]
     public string? NameLike { get; set; }
 
-    [FromQuery(Name = "city")]
+    [FromQuery]
     public string? City { get; set; }
 
-    [FromQuery(Name = "state")]
+    [FromQuery]
+    public string? State { get; set; }
+}
+
+public class SearchLabelModel
+{
+    public List<Guid>? Ids { get; set; }
+
+    public string? NameLike { get; set; }
+
+    public string? City { get; set; }
+
     public string? State { get; set; }
 }
 
@@ -68,7 +79,7 @@ public class LabelDatabaseModel
     public DateTime created_at { get; set; }
     public DateTime? updated_at { get; set; }
 
-    LabelDatabaseModel(Guid id, string name, string? city, string? state, DateTime created_at, DateTime updated_at)
+    LabelDatabaseModel(Guid id, string name, string? city, string? state, DateTime created_at, DateTime? updated_at)
     {
         this.name = name;
         this.id = id;
@@ -88,7 +99,7 @@ public class LabelResponseModel
     public string CreatedAt { get; set; }
     public string? UpdatedAt { get; set; }
 
-    public LabelResponseModel(Guid id, string name, string? city, string? state, string createdAt, string updatedAt)
+    public LabelResponseModel(Guid id, string name, string? city, string? state, string createdAt, string? updatedAt)
     {
         this.Name = name;
         this.Id = id;

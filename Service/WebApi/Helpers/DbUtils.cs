@@ -44,19 +44,21 @@ namespace WebApi.Helpers
     public class ExactMatchSearchTerm<T> : ISearchTerm
     {
         public string ColumnName { get; set; }
+        public bool IgnoreCase { get; set; }
         public T Value { get; set; }
 
-        public ExactMatchSearchTerm(string columnName, T value)
+        public ExactMatchSearchTerm(string columnName, T value, bool ignoreCase = false)
         {
             this.ColumnName = columnName;
             this.Value = value;
+            this.IgnoreCase = ignoreCase;
         }
 
         public ClauseAndParameters GenerateClauseAndParameters()
         {
             ClauseAndParameters result = new ClauseAndParameters();
 
-            result.Clause = $"{this.ColumnName} = @{this.ColumnName}";
+            result.Clause = $"{(this.IgnoreCase == true ? "LOWER(" : "")}{this.ColumnName}{(this.IgnoreCase == true ? ")" : "")} = {(this.IgnoreCase == true ? "LOWER(" : "")}@{this.ColumnName}{(this.IgnoreCase == true ? ")" : "")}";
 
             result.Parameters.Add(this.ColumnName, this.Value);
 
@@ -68,20 +70,22 @@ namespace WebApi.Helpers
     {
         public string ColumnName { get; set; }
         public string Value { get; set; }
+        public bool IgnoreCase { get; set; }
         public LikeTypes LikeComparisonType { get; set; }
 
-        public LikeSearchTerm(string columnName, string value, LikeTypes likeComparisonType)
+        public LikeSearchTerm(string columnName, string value, LikeTypes likeComparisonType, bool ignoreCase = true)
         {
             this.ColumnName = columnName;
             this.Value = value;
             this.LikeComparisonType = likeComparisonType;
+            this.IgnoreCase = ignoreCase;
         }
 
         public ClauseAndParameters GenerateClauseAndParameters()
         {
             ClauseAndParameters result = new ClauseAndParameters();
 
-            result.Clause = $"{this.ColumnName} LIKE @{this.ColumnName}";
+            result.Clause = $"{this.ColumnName} {(this.IgnoreCase == true ? "ILIKE" : "LIKE")} @{this.ColumnName}";
 
             string value = "";
 
@@ -115,24 +119,26 @@ namespace WebApi.Helpers
     {
         public string ColumnName { get; set; }
         public List<T> Values { get; set; }
+        public bool IgnoreCase { get; set; }
 
-        public InArraySearchTerm(string columnName, List<T> values)
+        public InArraySearchTerm(string columnName, List<T> values, bool ignoreCase = false)
         {
             this.ColumnName = columnName;
             this.Values = values;
+            this.IgnoreCase = ignoreCase;
         }
 
         public ClauseAndParameters GenerateClauseAndParameters()
         {
             ClauseAndParameters result = new ClauseAndParameters();
 
-            result.Clause = $"{this.ColumnName} IN (\n";
+            result.Clause = $"{(this.IgnoreCase == true ? "LOWER(" : "")}{this.ColumnName}{(this.IgnoreCase == true ? ")" : "")} IN (\n";
 
             int index = 0;
 
             foreach (T item in this.Values)
             {
-                result.Clause += $"{(index > 0 ? ",\n" : "")}@{this.ColumnName}_{index}";
+                result.Clause += $"{(index > 0 ? ",\n" : "")}{(this.IgnoreCase == true ? "LOWER(" : "")}@{this.ColumnName}_{index}{(this.IgnoreCase == true ? ")" : "")}";
 
 
                 result.Parameters.Add($"{this.ColumnName}_{index++}", item);
@@ -226,15 +232,18 @@ namespace WebApi.Helpers
                 }
             }
 
-
             if (updateDictionary.Count == 0)
             {
                 return null;
             }
 
+            updateDictionary.Add("updated_at", DateTime.UtcNow);
+
             string query = $"UPDATE {tableName} SET";
 
             int paramCount = 0;
+
+
 
             foreach (KeyValuePair<string, object> kvp in updateDictionary)
             {
@@ -253,6 +262,7 @@ namespace WebApi.Helpers
             {
                 dbArgs.Add(pair.Key, pair.Value);
             }
+
 
             UpdateQueryPackage result = new UpdateQueryPackage(query, dbArgs);
 

@@ -33,7 +33,7 @@ describe('Post Label Tests', () => {
 
   it('Gets errors for invalid label', async () => {
     //just call with default values
-    const result = await createLabel(context, { name: undefined }, entityMap, undefined, true)
+    const result = await createLabel(context, { Name: undefined }, entityMap, undefined, true)
     expect(result.status).toEqual(400);
     expect(result.data.errors["Name"]).toBeTruthy();
     expect(result.data.errors["Name"].length).toEqual(1);

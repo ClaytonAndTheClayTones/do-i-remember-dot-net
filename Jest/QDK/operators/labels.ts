@@ -6,29 +6,29 @@ import { generate } from 'randomstring';
 
 
 export type LabelCreateModel = {
-    name: string,
-    city?: string,
-    state?: string
+    Name: string,
+    City?: string,
+    State?: string
 } 
 
 export type LabelUpdateModel = {
-    name?: string,
-    city?: string,
-    state?: string
+    Name?: string,
+    City?: string,
+    State?: string
 }
 
 export type LabelSearchModel = {
-    ids?: string[],
-    nameLike?: string,
-    city?: string,
-    state?: string
+    Ids?: string[],
+    NameLike?: string,
+    City?: string,
+    State?: string
 }
  
 export const mintDefaultLabel = async function (overrides: Partial<LabelCreateModel>): Promise<Partial<LabelCreateModel>> {
     const defaultLabel: LabelCreateModel = {
-        name: "testName" + generate(10),
-        city: "testCity",
-        state: "testState"
+        Name: "testName" + generate(10),
+        City: "testCity",
+        State: "testState"
     }
 
     Object.assign(defaultLabel, overrides);
@@ -46,7 +46,7 @@ export const createLabel = async function (musixContext: MusixApiContext, overri
     {
         const entityMapItem : EntityMapItem = {
             context : musixContext,
-            id: result.data.id,
+            id: result.data.Id,
             deleteMethod : deleteLabel,
             entityName: "label"
         }; 
@@ -57,9 +57,9 @@ export const createLabel = async function (musixContext: MusixApiContext, overri
     if(!allowFailures)
     {
         expect(result.status).toEqual(201);
-        expect(result.data).toHaveSamePropertiesAs(labelToPost, ["id", "createdAt", "updatedAt"]);
-        expect(result.data.id).toBeTruthy(); 
-        expect(result.data.createdAt).toBeTruthy();
+        expect(result.data).toHaveSamePropertiesAs(labelToPost, ["Id", "CreatedAt", "UpdatedAt"]);
+        expect(result.data.Id).toBeTruthy(); 
+        expect(result.data.CreatedAt).toBeTruthy();
     }
 
     return result;
@@ -72,7 +72,7 @@ export const getLabelById = async function (musixContext: MusixApiContext, id: s
     if(!allowFailures)
     {
         expect(result.status).toEqual(200);
-        expect(result.data.id).toEqual(id);
+        expect(result.data.Id).toEqual(id);
     }
 
     return result;
@@ -99,7 +99,7 @@ export const updateLabel = async function (musixContext: MusixApiContext, id: st
     if(!allowFailures)
     {
         expect(result.status).toEqual(200);
-        expect(result.data.id).toEqual(id); 
+        expect(result.data.Id).toEqual(id); 
     }
 
     return result;
@@ -115,7 +115,7 @@ export const deleteLabel = async function (musixContext: MusixApiContext, id: st
     if(!allowFailures)
     {
         expect(result.status).toEqual(200); 
-        expect(result.data.id).toEqual(id);
+        expect(result.data.Id).toEqual(id);
     }
 
     return result;
