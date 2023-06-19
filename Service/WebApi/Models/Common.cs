@@ -57,12 +57,24 @@ public class PagingResponseInfo
     public int TotalCount { get; set; }
 }
 
-public class PagedList<T> : List<T>
+public class PagedList<T>
 {
     public PagingResultInfo? PagingInfo { get; set; }
+    public List<T> Items { get; set; }
+
+    public PagedList()
+    {
+        Items = new List<T>();
+    }
 }
 
-public class PagedListResponse<T> : List<T>
+public class PagedListResponse<T>
 {
     public PagingResponseInfo? PagingInfo { get; set; }
+    public List<T> Items { get; set; }
+
+    public PagedListResponse()
+    {
+        Items = new List<T>();
+    }
 }

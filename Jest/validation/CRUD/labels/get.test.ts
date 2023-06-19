@@ -57,10 +57,10 @@ describe('Get Label Tests', () => {
 
     expect(labelsRetrieved.status).toEqual(200);
 
-    expect(labelsRetrieved.data.length).toEqual(2);
+    expect(labelsRetrieved.data.Items.length).toEqual(2);
 
-    expect(labelsRetrieved.data[0]).toHaveSamePropertiesAs(labelResult1.data);
-    expect(labelsRetrieved.data[1]).toHaveSamePropertiesAs(labelResult3.data); 
+    expect(labelsRetrieved.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrieved.data.Items[1]).toHaveSamePropertiesAs(labelResult3.data); 
   }) 
  
   it('Gets labels with paging', async () => {
@@ -88,13 +88,13 @@ describe('Get Label Tests', () => {
     expect(labelsRetrievedPage1.status).toEqual(200);
     expect(labelsRetrievedPage2.status).toEqual(200);
 
-    expect(labelsRetrievedPage1.data.length).toEqual(2);
-    expect(labelsRetrievedPage2.data.length).toEqual(2);
+    expect(labelsRetrievedPage1.data.Items.length).toEqual(2);
+    expect(labelsRetrievedPage2.data.Items.length).toEqual(2);
 
-    expect(labelsRetrievedPage1.data[0]).toHaveSamePropertiesAs(labelResult1.data);
-    expect(labelsRetrievedPage1.data[1]).toHaveSamePropertiesAs(labelResult2.data); 
-    expect(labelsRetrievedPage2.data[0]).toHaveSamePropertiesAs(labelResult3.data);
-    expect(labelsRetrievedPage2.data[1]).toHaveSamePropertiesAs(labelResult4.data); 
+    expect(labelsRetrievedPage1.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrievedPage1.data.Items[1]).toHaveSamePropertiesAs(labelResult2.data); 
+    expect(labelsRetrievedPage2.data.Items[0]).toHaveSamePropertiesAs(labelResult3.data);
+    expect(labelsRetrievedPage2.data.Items[1]).toHaveSamePropertiesAs(labelResult4.data); 
   }) 
 
   it('Gets labels with nameLike filter', async () => {
@@ -114,10 +114,10 @@ describe('Get Label Tests', () => {
 
     expect(labelsRetrieved.status).toEqual(200);
 
-    expect(labelsRetrieved.data.length).toEqual(2);
+    expect(labelsRetrieved.data.Items.length).toEqual(2);
 
-    expect(labelsRetrieved.data[0]).toHaveSamePropertiesAs(labelResult1.data);
-    expect(labelsRetrieved.data[1]).toHaveSamePropertiesAs(labelResult2.data); 
+    expect(labelsRetrieved.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrieved.data.Items[1]).toHaveSamePropertiesAs(labelResult2.data); 
   }) 
 
   it('Gets labels with city filter', async () => {
@@ -136,10 +136,10 @@ describe('Get Label Tests', () => {
 
     expect(labelsRetrieved.status).toEqual(200);
 
-    expect(labelsRetrieved.data.length).toEqual(2);
+    expect(labelsRetrieved.data.Items.length).toEqual(2);
 
-    expect(labelsRetrieved.data[0]).toHaveSamePropertiesAs(labelResult1.data);
-    expect(labelsRetrieved.data[1]).toHaveSamePropertiesAs(labelResult3.data); 
+    expect(labelsRetrieved.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrieved.data.Items[1]).toHaveSamePropertiesAs(labelResult3.data); 
   }) 
 
   it('Gets labels with state filter', async () => {
@@ -158,10 +158,10 @@ describe('Get Label Tests', () => {
 
     expect(labelsRetrieved.status).toEqual(200);
 
-    expect(labelsRetrieved.data.length).toEqual(2);
+    expect(labelsRetrieved.data.Items.length).toEqual(2);
 
-    expect(labelsRetrieved.data[0]).toHaveSamePropertiesAs(labelResult1.data);
-    expect(labelsRetrieved.data[1]).toHaveSamePropertiesAs(labelResult2.data); 
+    expect(labelsRetrieved.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrieved.data.Items[1]).toHaveSamePropertiesAs(labelResult2.data); 
   }) 
 })
 

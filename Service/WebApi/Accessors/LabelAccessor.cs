@@ -45,12 +45,12 @@ public class LabelAccessor : ILabelAccessor
 
         foreach (LabelDatabaseModel dbModel in results)
         {
-            pagedList.Add(_labelAdapter.convertFromDatabaseModelToModel(dbModel));
+            pagedList.Items.Add(_labelAdapter.convertFromDatabaseModelToModel(dbModel));
         }
 
         if (queryPackage.pagingInfoUsed != null)
         {
-            int totalCount = (results.Count > 0 && results[0].full_count != null) ? (int)results[0].full_count : 0;
+            long totalCount = (results.Count > 0 && results[0].full_count != null) ? (long)(results[0].full_count) : (long)0;
 
             PagingResultInfo pagingResultInfo = new PagingResultInfo()
             {

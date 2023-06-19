@@ -52,9 +52,9 @@ public class LabelsController : ControllerBase
 
         PagedListResponse<LabelResponseModel> responseModel = new PagedListResponse<LabelResponseModel>();
 
-        labels.ForEach(x =>
+        labels.Items.ForEach(x =>
         {
-            responseModel.Add(_labelAdapter.convertFromModelToResponseModel(x));
+            responseModel.Items.Add(_labelAdapter.convertFromModelToResponseModel(x));
         });
 
         if (labels.PagingInfo != null)
