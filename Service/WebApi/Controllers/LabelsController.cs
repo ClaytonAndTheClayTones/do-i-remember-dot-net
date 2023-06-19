@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Labels;
 using WebApi.Services;
 using WebApi.Adapters;
+using WebApi.Common;
 using System.Linq;
 using System.Reflection.Emit;
+using WebApi.Adapters.LabelAdapter;
+using WebApi.Models.Common;
+using WebApi.Adapters.Common;
 
 [ApiController]
 [Route("[controller]")]
@@ -13,13 +17,14 @@ public class LabelsController : ControllerBase
 {
     private ILabelService _labelService;
     private ILabelAdapter _labelAdapter;
+    private IPagingAdapter _pagingAdapter;
 
-    public LabelsController(ILabelService labelService, ILabelAdapter labelAdapter)
+    public LabelsController(ILabelService labelService, ILabelAdapter labelAdapter, IPagingAdapter pagingAdapter)
     {
         _labelService = labelService;
         _labelAdapter = labelAdapter;
+        _pagingAdapter = pagingAdapter;
     }
-
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateLabelRequest model)
@@ -34,19 +39,30 @@ public class LabelsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Search(
         [FromQuery]
-        SearchLabelRequest request
+        SearchLabelRequest request,
+        [FromQuery]
+        PagingRequestInfo paging
     )
     {
         SearchLabelModel searchLabelModel = this._labelAdapter.convertFromRequestToSearchModel(request);
 
-        IEnumerable<LabelModel> labels = await _labelService.Search(searchLabelModel);
+        PagingInfo pagingInfo = this._pagingAdapter.convertFromPagingRequestInfoToPagingInfo(paging);
 
-        IEnumerable<LabelResponseModel> responseLabels = labels.Select(x =>
+        PagedList<LabelModel> labels = await _labelService.Search(searchLabelModel, pagingInfo);
+
+        PagedListResponse<LabelResponseModel> responseModel = new PagedListResponse<LabelResponseModel>();
+
+        labels.ForEach(x =>
         {
-            return _labelAdapter.convertFromModelToResponseModel(x);
+            responseModel.Add(_labelAdapter.convertFromModelToResponseModel(x));
         });
 
-        return Ok(responseLabels);
+        if (labels.PagingInfo != null)
+        {
+            responseModel.PagingInfo = _pagingAdapter.convertFromPagingResultInfoToPagingResponseInfo(labels.PagingInfo);
+        }
+
+        return Ok(responseModel);
     }
 
     [HttpGet("{id}")]

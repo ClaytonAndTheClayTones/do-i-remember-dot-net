@@ -3,6 +3,7 @@ namespace WebApi.Models.Labels;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models.Common;
 
 public class CreateLabelRequest
 {
@@ -78,6 +79,7 @@ public class LabelDatabaseModel
     public string? state { get; set; }
     public DateTime created_at { get; set; }
     public DateTime? updated_at { get; set; }
+    public long? full_count { get; set; }
 
     LabelDatabaseModel(Guid id, string name, string? city, string? state, DateTime created_at, DateTime? updated_at)
     {
@@ -87,6 +89,18 @@ public class LabelDatabaseModel
         this.state = state;
         this.created_at = created_at;
         this.updated_at = updated_at;
+    }
+
+
+    LabelDatabaseModel(Guid id, string name, string? city, string? state, DateTime created_at, DateTime? updated_at, long? full_count)
+    {
+        this.name = name;
+        this.id = id;
+        this.city = city;
+        this.state = state;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.full_count = full_count;
     }
 }
 

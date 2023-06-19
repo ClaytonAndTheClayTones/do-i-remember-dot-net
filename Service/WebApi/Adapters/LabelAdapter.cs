@@ -1,8 +1,10 @@
-namespace WebApi.Adapters;
+namespace WebApi.Adapters.LabelAdapter;
 
 using System.Linq;
 using WebApi.Models.Labels;
+using WebApi.Adapters.Common;
 using WebApi.Helpers;
+using WebApi.Models.Common;
 
 public interface ILabelAdapter
 {
@@ -34,7 +36,6 @@ public class LabelAdapter : ILabelAdapter
 
         return responseModel;
     }
-
 
     public LabelModel convertFromDatabaseModelToModel(LabelDatabaseModel model)
     {

@@ -5,10 +5,11 @@ using BCrypt.Net;
 using WebApi.Helpers;
 using WebApi.Models.Labels;
 using WebApi.Accessors;
+using WebApi.Models.Common;
 
 public interface ILabelService
 {
-    Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel);
+    Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? pagingModel);
     Task<LabelModel?> GetById(Guid id);
     Task<LabelModel> Create(CreateLabelRequest model);
     Task<LabelModel?> Update(Guid id, UpdateLabelRequest model);
@@ -24,9 +25,9 @@ public class LabelService : ILabelService
         _labelAccessor = labelAccessor;
     }
 
-    public async Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel)
+    public async Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? pagingModel)
     {
-        return await _labelAccessor.Search(searchModel);
+        return await _labelAccessor.Search(searchModel, pagingModel);
     }
 
     public async Task<LabelModel?> GetById(Guid id)

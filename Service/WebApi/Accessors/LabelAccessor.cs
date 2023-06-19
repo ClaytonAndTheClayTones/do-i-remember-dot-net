@@ -6,10 +6,12 @@ using WebApi.Models.Labels;
 using WebApi.Adapters;
 using System.Linq;
 using System.Collections.Generic;
+using WebApi.Adapters.LabelAdapter;
+using WebApi.Models.Common;
 
 public interface ILabelAccessor
 {
-    Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel);
+    Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? paging);
     Task<LabelModel?> GetById(Guid id);
     Task<LabelModel> Create(CreateLabelRequest label);
     Task<LabelModel?> Update(Guid id, UpdateLabelRequest label);
@@ -29,24 +31,40 @@ public class LabelAccessor : ILabelAccessor
         _labelAdapter = labelAdapter;
     }
 
-    public async Task<IEnumerable<LabelModel>> Search(SearchLabelModel? searchModel)
+    public async Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? paging)
     {
         using var connection = _context.CreateConnection();
 
         List<ISearchTerm> searchTerms = this._labelAdapter.convertFromSearchModelToSearchTerms(searchModel);
 
-        var queryPackage = this._dbUtils.BuildSelectQuery("labels", searchTerms);
+        var queryPackage = this._dbUtils.BuildSelectQuery("labels", searchTerms, paging);
 
-        var results = await connection.QueryAsync<LabelDatabaseModel>(queryPackage.sql, queryPackage.parameters);
+        List<LabelDatabaseModel> results = (await connection.QueryAsync<LabelDatabaseModel>(queryPackage.sql, queryPackage.parameters)).ToList();
 
-        List<LabelModel> labelModels = new List<LabelModel>();
+        PagedList<LabelModel> pagedList = new PagedList<LabelModel>();
 
         foreach (LabelDatabaseModel dbModel in results)
         {
-            labelModels.Add(_labelAdapter.convertFromDatabaseModelToModel(dbModel));
+            pagedList.Add(_labelAdapter.convertFromDatabaseModelToModel(dbModel));
         }
 
-        return labelModels;
+        if (queryPackage.pagingInfoUsed != null)
+        {
+            int totalCount = (results.Count > 0 && results[0].full_count != null) ? (int)results[0].full_count : 0;
+
+            PagingResultInfo pagingResultInfo = new PagingResultInfo()
+            {
+                Page = queryPackage.pagingInfoUsed.Page ?? 0,
+                PageLength = queryPackage.pagingInfoUsed.PageLength ?? 0,
+                SortBy = queryPackage.pagingInfoUsed.SortBy,
+                IsDescending = queryPackage.pagingInfoUsed.IsDescending,
+                TotalCount = totalCount
+            };
+
+            pagedList.PagingInfo = pagingResultInfo;
+        }
+
+        return pagedList;
     }
 
     public async Task<LabelModel?> GetById(Guid id)

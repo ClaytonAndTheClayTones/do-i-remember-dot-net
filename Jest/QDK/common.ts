@@ -1,4 +1,10 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios"
+export type PagingRequestInfo = {
+    Page? : number,
+    PageLength? : number,
+    SortBy? : string,
+    IsDescending? : boolean
+}
 
 export class TestEntityMap {
     public entities: EntityMapItem[] = []

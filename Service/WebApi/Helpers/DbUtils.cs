@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Dapper;
 using WebApi.Helpers;
+using WebApi.Models.Common;
 
 namespace WebApi.Helpers
 {
@@ -153,7 +154,8 @@ namespace WebApi.Helpers
     public interface IDbUtils
     {
         UpdateQueryPackage? BuildUpdateQuery(string tableName, Guid id, object updateObject);
-        SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms);
+        SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms, PagingInfo? pagingInfo, bool skipPaging = false);
+        void BuildPagingInfo(ref SelectQueryPackage package, PagingInfo? pagingInfo);
     }
 
     public class UpdateQueryPackage
@@ -174,6 +176,8 @@ namespace WebApi.Helpers
         public string sql { get; set; }
 
         public DynamicParameters parameters { get; set; }
+        public PagingInfo? pagingInfoUsed { get; set; }
+
 
         public SelectQueryPackage(string sql, DynamicParameters parameters)
         {
@@ -188,15 +192,43 @@ namespace WebApi.Helpers
         {
         }
 
-        public SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms)
+        public void BuildPagingInfo(ref SelectQueryPackage package, PagingInfo? pagingInfo)
         {
-            string query = $"SELECT * FROM {tableName}";
+            if (pagingInfo == null)
+            {
+                pagingInfo = new PagingInfo()
+                {
+                    Page = 1,
+                    PageLength = 25
+                };
+            }
 
-            DynamicParameters parameters = new DynamicParameters();
+            if (pagingInfo.SortBy != null)
+            {
+                package.sql += $"\nORDER BY @sort_by {(pagingInfo.IsDescending == true ? "DESC" : "ASC")}";
+                package.parameters.Add("sort_by", pagingInfo.SortBy);
+            }
+
+            int page = pagingInfo.Page == null ? 1 : Math.Max(1, (int)pagingInfo.Page);
+            int limit = pagingInfo.PageLength == null ? 25 : Math.Max(1, (int)pagingInfo.PageLength);
+
+            int offset = (page - 1) * limit;
+
+            package.sql += $"\nOFFSET @offset LIMIT @limit";
+
+            package.parameters.Add("limit", limit);
+            package.parameters.Add("offset", offset);
+
+            package.pagingInfoUsed = pagingInfo;
+        }
+
+        public SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms, PagingInfo? pagingInfo, bool skipPaging = false)
+        {
+            SelectQueryPackage package = new SelectQueryPackage($"SELECT *{(skipPaging ? "" : ", count(*) over() as full_count")} FROM {tableName}", new DynamicParameters());
 
             if (searchTerms.Count > 0)
             {
-                query += "\nWHERE";
+                package.sql += "\nWHERE";
 
                 int paramCount = 0;
 
@@ -204,18 +236,21 @@ namespace WebApi.Helpers
                 {
                     ClauseAndParameters clauseAndParameters = x.GenerateClauseAndParameters();
 
-                    query += $"{(paramCount++ > 0 ? " AND" : "")}{"\n"}{clauseAndParameters.Clause}";
+                    package.sql += $"{(paramCount++ > 0 ? " AND" : "")}{"\n"}{clauseAndParameters.Clause}";
 
                     foreach (string parameterName in clauseAndParameters.Parameters.ParameterNames)
                     {
-                        parameters.Add(parameterName, clauseAndParameters.Parameters.Get<object>(parameterName));
+                        package.parameters.Add(parameterName, clauseAndParameters.Parameters.Get<object>(parameterName));
                     }
                 });
+
+                if (!skipPaging)
+                {
+                    BuildPagingInfo(ref package, pagingInfo);
+                }
             }
 
-            SelectQueryPackage returnPackage = new SelectQueryPackage(query, parameters);
-
-            return returnPackage;
+            return package;
         }
 
         public UpdateQueryPackage? BuildUpdateQuery(string tableName, Guid id, object updateObject)
@@ -243,8 +278,6 @@ namespace WebApi.Helpers
 
             int paramCount = 0;
 
-
-
             foreach (KeyValuePair<string, object> kvp in updateDictionary)
             {
 
@@ -262,7 +295,6 @@ namespace WebApi.Helpers
             {
                 dbArgs.Add(pair.Key, pair.Value);
             }
-
 
             UpdateQueryPackage result = new UpdateQueryPackage(query, dbArgs);
 

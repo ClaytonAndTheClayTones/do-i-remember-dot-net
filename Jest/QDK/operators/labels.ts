@@ -1,4 +1,4 @@
-import { EntityMapItem, TestEntityMap, convertObjectToQueryArgs } from '../../QDK/common';
+import { EntityMapItem, PagingRequestInfo, TestEntityMap, convertObjectToQueryArgs } from '../../QDK/common';
 import { MusixApiContext } from '../../QDK/contexts'; 
 import { qadelete, qaget, qapatch, qapost } from '../../QDK/qaxios';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -16,8 +16,8 @@ export type LabelUpdateModel = {
     City?: string,
     State?: string
 }
-
-export type LabelSearchModel = {
+ 
+export type LabelSearchModel = PagingRequestInfo & {
     Ids?: string[],
     NameLike?: string,
     City?: string,
@@ -53,7 +53,7 @@ export const createLabel = async function (musixContext: MusixApiContext, overri
 
         testEntityMap.entities.push( entityMapItem );
     }
-
+   
     if(!allowFailures)
     {
         expect(result.status).toEqual(201);

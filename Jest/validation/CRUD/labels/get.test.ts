@@ -62,6 +62,40 @@ describe('Get Label Tests', () => {
     expect(labelsRetrieved.data[0]).toHaveSamePropertiesAs(labelResult1.data);
     expect(labelsRetrieved.data[1]).toHaveSamePropertiesAs(labelResult3.data); 
   }) 
+ 
+  it('Gets labels with paging', async () => {
+    //just call with default values
+    const labelResult1 = await createLabel(context, {}, entityMap)
+    const labelResult2 = await createLabel(context, {}, entityMap)
+    const labelResult3 = await createLabel(context, {}, entityMap) 
+    const labelResult4 = await createLabel(context, {}, entityMap) 
+
+    const searchModelPage1 : LabelSearchModel = {
+      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id, labelResult4.data.Id],
+      Page: 1,
+      PageLength: 2
+    };
+ 
+    const searchModelPage2 : LabelSearchModel = {
+      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id, labelResult4.data.Id],
+      Page: 2,
+      PageLength: 2
+    };
+
+    const labelsRetrievedPage1 = await searchLabels(context, searchModelPage1); 
+    const labelsRetrievedPage2 = await searchLabels(context, searchModelPage2); 
+
+    expect(labelsRetrievedPage1.status).toEqual(200);
+    expect(labelsRetrievedPage2.status).toEqual(200);
+
+    expect(labelsRetrievedPage1.data.length).toEqual(2);
+    expect(labelsRetrievedPage2.data.length).toEqual(2);
+
+    expect(labelsRetrievedPage1.data[0]).toHaveSamePropertiesAs(labelResult1.data);
+    expect(labelsRetrievedPage1.data[1]).toHaveSamePropertiesAs(labelResult2.data); 
+    expect(labelsRetrievedPage2.data[0]).toHaveSamePropertiesAs(labelResult3.data);
+    expect(labelsRetrievedPage2.data[1]).toHaveSamePropertiesAs(labelResult4.data); 
+  }) 
 
   it('Gets labels with nameLike filter', async () => {
     //just call with default values
