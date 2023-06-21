@@ -1,60 +1,60 @@
 ﻿namespace WebApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.Labels;
+using WebApi.Models.Artists;
 using WebApi.Services;
 using WebApi.Adapters;
 using WebApi.Common;
 using System.Linq;
 using System.Reflection.Emit;
-using WebApi.Adapters.LabelAdapter;
+using WebApi.Adapters.ArtistAdapter;
 using WebApi.Models.Common;
 using WebApi.Adapters.Common;
 
 [ApiController]
 [Route("[controller]")]
-public class LabelsController : ControllerBase
+public class ArtistsController : ControllerBase
 {
-    private ILabelService _labelService;
-    private ILabelAdapter _labelAdapter;
+    private IArtistService _artistService;
+    private IArtistAdapter _artistAdapter;
     private IPagingAdapter _pagingAdapter;
 
-    public LabelsController(ILabelService labelService, ILabelAdapter labelAdapter, IPagingAdapter pagingAdapter)
+    public ArtistsController(IArtistService labelService, IArtistAdapter labelAdapter, IPagingAdapter pagingAdapter)
     {
-        _labelService = labelService;
-        _labelAdapter = labelAdapter;
+        _artistService = labelService;
+        _artistAdapter = labelAdapter;
         _pagingAdapter = pagingAdapter;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateLabelRequest model)
+    public async Task<IActionResult> Create(CreateArtistRequest model)
     {
-        LabelModel label = await _labelService.Create(model);
+        ArtistModel label = await _artistService.Create(model);
 
-        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+        ArtistResponseModel responseArtist = _artistAdapter.convertFromModelToResponseModel(label);
 
-        return StatusCode(201, responseLabel);
+        return StatusCode(201, responseArtist);
     }
 
     [HttpGet]
     public async Task<IActionResult> Search(
         [FromQuery]
-        SearchLabelRequest request,
+        SearchArtistRequest request,
         [FromQuery]
         PagingRequestInfo paging
     )
     {
-        SearchLabelModel searchLabelModel = this._labelAdapter.convertFromRequestToSearchModel(request);
+        SearchArtistModel searchArtistModel = this._artistAdapter.convertFromRequestToSearchModel(request);
 
         PagingInfo pagingInfo = this._pagingAdapter.convertFromPagingRequestInfoToPagingInfo(paging);
 
-        PagedList<LabelModel> labels = await _labelService.Search(searchLabelModel, pagingInfo);
+        PagedList<ArtistModel> labels = await _artistService.Search(searchArtistModel, pagingInfo);
 
-        PagedListResponse<LabelResponseModel> responseModel = new PagedListResponse<LabelResponseModel>();
+        PagedListResponse<ArtistResponseModel> responseModel = new PagedListResponse<ArtistResponseModel>();
 
         labels.Items.ForEach(x =>
         {
-            responseModel.Items.Add(_labelAdapter.convertFromModelToResponseModel(x));
+            responseModel.Items.Add(_artistAdapter.convertFromModelToResponseModel(x));
         });
 
         if (labels.PagingInfo != null)
@@ -68,45 +68,45 @@ public class LabelsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        LabelModel? label = await _labelService.GetById(id);
+        ArtistModel? label = await _artistService.GetById(id);
 
         if (label == null)
         {
             return NotFound();
         }
 
-        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+        ArtistResponseModel responseArtist = _artistAdapter.convertFromModelToResponseModel(label);
 
-        return Ok(responseLabel);
+        return Ok(responseArtist);
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> Update(Guid id, UpdateLabelRequest model)
+    public async Task<IActionResult> Update(Guid id, UpdateArtistRequest model)
     {
-        LabelModel? label = await _labelService.Update(id, model);
+        ArtistModel? label = await _artistService.Update(id, model);
 
         if (label == null)
         {
             return NotFound();
         }
 
-        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+        ArtistResponseModel responseArtist = _artistAdapter.convertFromModelToResponseModel(label);
 
-        return Ok(responseLabel);
+        return Ok(responseArtist);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        LabelModel? label = await _labelService.Delete(id);
+        ArtistModel? label = await _artistService.Delete(id);
 
         if (label == null)
         {
             return NotFound();
         }
 
-        LabelResponseModel responseLabel = _labelAdapter.convertFromModelToResponseModel(label);
+        ArtistResponseModel responseArtist = _artistAdapter.convertFromModelToResponseModel(label);
 
-        return Ok(responseLabel);
+        return Ok(responseArtist);
     }
 }
