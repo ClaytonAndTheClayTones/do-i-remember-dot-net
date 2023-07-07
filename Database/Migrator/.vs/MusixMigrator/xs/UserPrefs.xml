@@ -1,24 +1,35 @@
 ﻿<Properties StartupConfiguration="{C76D56E9-CB74-4387-A2B0-32CE1AC47381}|Default">
-  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/claytonstetz/Documents/GitHub/do-i-remember-dot-net/Database/Migrator/Program.cs" relfile="Program.cs" line="66" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.Migrator PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
+    <Files>
+      <File FileName="Program.cs" Line="66" Column="1" />
+      <File FileName="appsettings.json" Line="4" Column="32" />
+      <File FileName="Database/002.do.createLabelsTable.sql" Line="2" Column="13" />
+      <File FileName="Database/003.do.createArtistsTable.sql" Line="24" Column="1" />
+      <File FileName="Database/003.do.createLocationsTable.sql" Line="15" Column="66" />
+      <File FileName="Database/001.do.installUuidExtension.sql" Line="4" Column="39" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="MusixMigrator" expanded="True">
-            <Node name="Migrator" expanded="True">
+          <Node name="MusixMigrator">
+            <Node name="Migrator">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
               <Node name="Database" expanded="True" />
+              <Node name="Program.cs" selected="True" />
             </Node>
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

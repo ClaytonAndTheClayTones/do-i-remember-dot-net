@@ -24,9 +24,9 @@ export type LabelSearchModel = PagingRequestInfo & {
     State?: string
 }
  
-export const mintDefaultLabel = async function (overrides: Partial<LabelCreateModel>): Promise<Partial<LabelCreateModel>> {
+export const mintDefaultLabel = async function (overrides: Partial<LabelCreateModel> = {}): Promise<Partial<LabelCreateModel>> {
     const defaultLabel: LabelCreateModel = {
-        Name: "testName" + generate(10),
+        Name: "testName" + generate(12),
         City: "testCity",
         State: "testState"
     }
@@ -36,7 +36,7 @@ export const mintDefaultLabel = async function (overrides: Partial<LabelCreateMo
     return defaultLabel;
 }
 
-export const createLabel = async function (musixContext: MusixApiContext, overrides: Partial<LabelCreateModel>, testEntityMap?: TestEntityMap, axiosConfig?: AxiosRequestConfig, allowFailures: boolean = false) : Promise<AxiosResponse<Record<string,any>>> {
+export const createLabel = async function (musixContext: MusixApiContext, overrides: Partial<LabelCreateModel> = {}, testEntityMap?: TestEntityMap, axiosConfig?: AxiosRequestConfig, allowFailures: boolean = false) : Promise<AxiosResponse<Record<string,any>>> {
      
     const labelToPost = await mintDefaultLabel(overrides);
 

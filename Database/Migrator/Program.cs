@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Microsoft.Extensions.Configuration;
-using Npgsql;
-using System.Data;
+using Npgsql; 
 using Dapper;  
  
 Console.WriteLine("Hello, World!");
@@ -59,17 +58,15 @@ static class Migrator
     {
         var connection = getConnection();
 
-        List<string> sqlStrings = new List<string>();
+        var files = Directory.EnumerateFiles("./Database", "*.sql");
+        var sortedFiles = files.Order();
 
-        foreach (string file in Directory.EnumerateFiles("./Database", "*.sql"))
+        foreach (string file in sortedFiles)
         {
-            sqlStrings.Add(File.ReadAllText(file));
-        }
-
-        foreach(string sqlCommand in sqlStrings)
-        {
-            connection.Execute(sqlCommand);
-        }
+            string sqlString = File.ReadAllText(file);
+             
+            connection.Execute(sqlString); 
+        } 
     }
 }
  

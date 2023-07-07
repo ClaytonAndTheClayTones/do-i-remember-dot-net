@@ -12,6 +12,7 @@
     <None Remove="appsettings.json" />
     <None Remove="Database\001.do.installUuidExtension.sql" />
     <None Remove="Database\002.do.createLabelsTable.sql" />
+    <None Remove="Database\002.do %28copy%29.createLabelsTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\" />
@@ -26,6 +27,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Database\002.do.createLabelsTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\004.do.createArtistsTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\003.do.createLocationsTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

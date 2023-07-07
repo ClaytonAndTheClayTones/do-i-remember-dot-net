@@ -42,6 +42,20 @@
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
-        }
+        },
+        {
+          "name": "Debug Jest Tests: Current File Only",
+          "type": "node",
+          "request": "launch", 
+          "runtimeArgs": [
+            "--inspect-brk",
+            "${workspaceRoot}/node_modules/.bin/jest",
+            "${fileBasenameNoExtension}",
+            "--runInBand",
+            "--coverage=false"
+          ], 
+          "console": "integratedTerminal",
+          "internalConsoleOptions": "neverOpen"
+        },
     ]
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using Dapper;
-using WebApi.Helpers;
+﻿using System.ComponentModel; 
+using Dapper; 
 using WebApi.Models.Common;
 
 namespace WebApi.Helpers
@@ -13,7 +9,8 @@ namespace WebApi.Helpers
     {
         StartsWith,
         EndsWith,
-        Like
+        Like,
+        Exact
     }
 
     public class DbParameter<T>
@@ -36,9 +33,7 @@ namespace WebApi.Helpers
 
 
     public interface ISearchTerm
-    {
-        public string ColumnName { get; set; }
-
+    {  
         public ClauseAndParameters GenerateClauseAndParameters();
     }
 
@@ -68,11 +63,12 @@ namespace WebApi.Helpers
     }
 
     public class LikeSearchTerm : ISearchTerm
-    {
+    { 
         public string ColumnName { get; set; }
         public string Value { get; set; }
         public bool IgnoreCase { get; set; }
         public LikeTypes LikeComparisonType { get; set; }
+
 
         public LikeSearchTerm(string columnName, string value, LikeTypes likeComparisonType, bool ignoreCase = true)
         {
@@ -115,7 +111,7 @@ namespace WebApi.Helpers
             return result;
         }
     }
-
+     
     public class InArraySearchTerm<T> : ISearchTerm
     {
         public string ColumnName { get; set; }
@@ -146,6 +142,132 @@ namespace WebApi.Helpers
             }
 
             result.Clause += "\n)";
+            return result;
+        }
+    } 
+
+    public class ComparisonSearchTermInput
+    {
+
+        public string ColumnName { get; set; }
+        public string Value { get; set; }
+        public bool IgnoreCase { get; set; }
+        public LikeTypes LikeComparisonType { get; set; }
+
+        public ComparisonSearchTermInput(string columnName, string value, LikeTypes likeComparisonType = LikeTypes.Exact, bool ignoreCase = true)
+        {
+            this.ColumnName = columnName;
+            this.Value = value;
+            this.LikeComparisonType = likeComparisonType;
+            this.IgnoreCase = ignoreCase;
+        } 
+    }
+
+    public class ComparisonSearchTerm : ISearchTerm
+    {
+        public List<ComparisonSearchTermInput> Comparisons = new List<ComparisonSearchTermInput>();
+
+        public ComparisonSearchTerm()
+        {
+        }
+
+        public ComparisonSearchTerm(List<ComparisonSearchTermInput> comparisons)
+        {
+            this.Comparisons = comparisons;
+        }
+
+        private ClauseAndParameters GenerateIndividualComparisonClauseAndParameters(ComparisonSearchTermInput input)
+        {
+            ClauseAndParameters result = new ClauseAndParameters();
+
+            if (input.LikeComparisonType == LikeTypes.Exact)
+            {
+                result.Clause = $"{(input.IgnoreCase == true ? "LOWER(" : "")}{input.ColumnName}{(input.IgnoreCase == true ? ")" : "")} = {(input.IgnoreCase == true ? "LOWER(" : "")}@{input.ColumnName}{(input.IgnoreCase == true ? ")" : "")}";
+                result.Parameters.Add(input.ColumnName, input.Value); 
+            }
+
+            else
+            {
+                result.Clause = $"{input.ColumnName} {(input.IgnoreCase == true ? "ILIKE" : "LIKE")} @{input.ColumnName}";
+
+                string value = "";
+
+
+                switch (input.LikeComparisonType)
+                {
+                    case LikeTypes.StartsWith:
+                        {
+                            value = $"{input.Value}%";
+                            break;
+                        }
+                    case LikeTypes.EndsWith:
+                        {
+                            value = $"%{input.Value}";
+                            break;
+                        }
+                    case LikeTypes.Like:
+                        {
+                            value = $"%{input.Value}%";
+                            break;
+                        }
+                }
+
+                result.Parameters.Add(input.ColumnName, value);
+            }
+
+            return result;
+        }
+
+        public ClauseAndParameters GenerateClauseAndParameters()
+        {
+            ClauseAndParameters result = new ClauseAndParameters();
+
+            int comparisonIndex = 0;
+
+            this.Comparisons.ForEach(comparison =>
+            {
+                ClauseAndParameters clauseAndParameters = this.GenerateIndividualComparisonClauseAndParameters(comparison);
+
+                if(comparisonIndex++ != 0)
+                {
+                    result.Clause += "\nOR ";
+                }
+
+                result.Clause += clauseAndParameters.Clause;
+
+                clauseAndParameters.Parameters.ParameterNames.ToList().ForEach(paramName =>
+                {
+                    object toMove = clauseAndParameters.Parameters.Get<object>(paramName);
+                    result.Parameters.Add(paramName, toMove);
+                });
+            });
+
+            return result;
+        }
+    }
+
+    public class DateRangeSearchTerm : ISearchTerm
+    {
+        public string ColumnName { get; set; }
+        public DateTime? Min { get; set; }
+        public DateTime? Max { get; set; }
+
+        public DateRangeSearchTerm(string columnName, DateTime? min, DateTime? max)
+        {
+            this.ColumnName = columnName;
+            this.Min = min;
+            this.Max = max;
+        }
+
+        public ClauseAndParameters GenerateClauseAndParameters()
+        {
+            ClauseAndParameters result = new ClauseAndParameters();
+             
+            result.Clause = $"\n{this.ColumnName} BETWEEN COALESCE(@{this.ColumnName}_min, {this.ColumnName}) AND COALESCE(@{this.ColumnName}_max, {this.ColumnName})";
+             
+            result.Parameters.Add($"{this.ColumnName}_min", Min);
+            result.Parameters.Add($"{this.ColumnName}_max", Max);
+
             return result;
         }
     }

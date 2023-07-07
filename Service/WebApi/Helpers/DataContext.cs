@@ -1,7 +1,6 @@
 namespace WebApi.Helpers;
 
-using System.Data;
-using Dapper;
+using System.Data; 
 using Microsoft.Extensions.Options;
 using Npgsql;
 

@@ -1,15 +1,11 @@
 ﻿namespace WebApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.Artists;
-using WebApi.Services;
-using WebApi.Adapters;
-using WebApi.Common;
-using System.Linq;
-using System.Reflection.Emit;
+using WebApi.Models.Artists; 
 using WebApi.Adapters.ArtistAdapter;
 using WebApi.Models.Common;
 using WebApi.Adapters.Common;
+using WebApi.Services;
 
 [ApiController]
 [Route("[controller]")]

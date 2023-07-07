@@ -668,3 +668,72 @@ public class InArraySearchTermsGenerateClauseAndParameters
     }
 
 }
+ 
+[TestClass]
+public class DateRangeSearchTermsGenerateClauseAndParameters
+{
+    [TestMethod]
+    public void GeneratesClauseAndParametersWithNulls()
+    {
+        // Arrange
+        string columnName = "columnName"; 
+
+        DateRangeSearchTerm dateRageSearchTerm = new DateRangeSearchTerm(columnName, null, null);
+
+        string expectedClause = $"\ncolumnName BETWEEN COALESCE(@columnName_min, columnName) AND COALESCE(@columnName_max, columnName)";
+
+        List<string> expectedParamNames = new List<string>()
+        {
+            "columnName_min",
+            "columnName_max", 
+        };
+
+        // Act
+
+        ClauseAndParameters clauseAndParameters = dateRageSearchTerm.GenerateClauseAndParameters();
+
+        // Assert
+
+        Assert.AreEqual(expectedClause, clauseAndParameters.Clause);
+
+        CollectionAssert.AreEqual(expectedParamNames, clauseAndParameters.Parameters.ParameterNames.ToList());
+
+        Assert.AreEqual(null, clauseAndParameters.Parameters.Get<object>($"columnName_min"));
+        Assert.AreEqual(null, clauseAndParameters.Parameters.Get<object>($"columnName_max")); 
+    }
+
+    [TestMethod]
+    public void GeneratesClauseAndParametersWithValues()
+    {
+        // Arrange
+        string columnName = "columnName";
+
+        DateTime now = DateTime.Now;
+        DateTime min = now.AddDays(-1);
+        DateTime max = now.AddDays(1);
+
+        DateRangeSearchTerm dateRageSearchTerm = new DateRangeSearchTerm(columnName, min, max);
+
+        string expectedClause = $"\ncolumnName BETWEEN COALESCE(@columnName_min, columnName) AND COALESCE(@columnName_max, columnName)";
+
+        List<string> expectedParamNames = new List<string>()
+        {
+            "columnName_min",
+            "columnName_max",
+        };
+
+        // Act
+
+        ClauseAndParameters clauseAndParameters = dateRageSearchTerm.GenerateClauseAndParameters();
+
+        // Assert
+
+        Assert.AreEqual(expectedClause, clauseAndParameters.Clause);
+
+        CollectionAssert.AreEqual(expectedParamNames, clauseAndParameters.Parameters.ParameterNames.ToList());
+
+        Assert.AreEqual(min, clauseAndParameters.Parameters.Get<object>($"columnName_min"));
+        Assert.AreEqual(max, clauseAndParameters.Parameters.Get<object>($"columnName_max"));
+    }
+
+}

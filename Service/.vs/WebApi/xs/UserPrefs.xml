@@ -1,42 +1,77 @@
 ﻿<Properties StartupConfiguration="{ACC88FD6-0A88-47B1-A67D-DA0FA9D1D2C9}|Default">
-  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/claytonstetz/Documents/GitHub/do-i-remember-dot-net/Service/WebApi/Accessors/ArtistAccessor.cs" relfile="WebApi/Accessors/ArtistAccessor.cs" line="103" column="1" />
+      <Breakpoint file="/Users/claytonstetz/Documents/GitHub/do-i-remember-dot-net/Service/WebApi/Accessors/ArtistAccessor.cs" relfile="WebApi/Accessors/ArtistAccessor.cs" line="113" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <DisabledProjects>
     <String>WebApi.csproj</String>
     <String>../UnitTest/UnitTest.csproj</String>
   </DisabledProjects>
-  <MonoDevelop.Ide.ItemProperties.WebApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/claytonstetz/Documents/GitHub/do-i-remember-dot-net/Service/WebApi/Accessors/LabelAccessor.cs" relfile="WebApi/Accessors/LabelAccessor.cs" line="87" column="1" />
-    </BreakpointStore>
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="WebApi/Helpers/DataContext.cs">
+    <Files>
+      <File FileName="WebApi/Program.cs" Line="7" Column="23" />
+      <File FileName="WebApi/Controllers/ArtistsController.cs" Line="22" Column="40" />
+      <File FileName="WebApi/Controllers/LabelsController.cs" Line="5" Column="23" />
+      <File FileName="WebApi/appsettings.json" Line="14" Column="2" />
+      <File FileName="WebApi/Adapters/LabelAdapter (copy).cs" Line="121" Column="2" />
+      <File FileName="UnitTest/Helpers/CommonUtils.cs" Line="1" Column="1" />
+      <File FileName="UnitTest/Helpers/DbUtils.cs" Line="233" Column="41" />
+      <File FileName="WebApi/Accessors/ArtistAccessor.cs" Line="108" Column="51" />
+      <File FileName="WebApi/Adapters/Common.cs" Line="1" Column="1" />
+      <File FileName="WebApi/Adapters/LabelAdapter.cs" Line="75" Column="44" />
+      <File FileName="WebApi/Accessors/LabelAccessor.cs" Line="86" Column="1" />
+      <File FileName="WebApi/Common/Types.cs" Line="1" Column="1" />
+      <File FileName="WebApi/Services/LabelService.cs" Line="2" Column="2" />
+      <File FileName="WebApi/Models/Artists.cs" Line="31" Column="27" />
+      <File FileName="WebApi/Models/Labels.cs" Line="2" Column="2" />
+      <File FileName="WebApi/Services/ArtistService.cs" Line="22" Column="42" />
+      <File FileName="WebApi/Accessors/LocationAccessor.cs" Line="124" Column="11" />
+      <File FileName="WebApi/Adapters/LocationAdapter.cs" Line="87" Column="6" />
+      <File FileName="WebApi/Controllers/LocationsController.cs" Line="26" Column="73" />
+      <File FileName="WebApi/Models/Locations.cs" Line="82" Column="38" />
+      <File FileName="WebApi/Services/LocationService.cs" Line="20" Column="63" />
+      <File FileName="WebApi/Helpers/DbUtils.cs" Line="128" Column="65" />
+      <File FileName="WebApi/Helpers/DataContext.cs" Line="5" Column="14" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="WebApi" expanded="True">
-            <Node name="WebApi" expanded="True">
+          <Node name="WebApi">
+            <Node name="UnitTest">
+              <Node name="Dependencies" expanded="True">
+                <Node name="FrameworkReferences" expanded="True" />
+                <Node name="PackageDependencies" expanded="True" />
+                <Node name="ProjectDependencies" expanded="True" />
+              </Node>
+              <Node name="Adapters" expanded="True" />
+              <Node name="Helpers" expanded="True" />
+            </Node>
+            <Node name="WebApi">
+              <Node name="Dependencies" expanded="True">
+                <Node name="FrameworkReferences" expanded="True" />
+                <Node name="PackageDependencies" expanded="True">
+                  <Node name="Npgsql" expanded="True" />
+                </Node>
+              </Node>
               <Node name="Accessors" expanded="True" />
               <Node name="Adapters" expanded="True" />
               <Node name="Common" expanded="True" />
               <Node name="Controllers" expanded="True" />
-              <Node name="Helpers" expanded="True" />
               <Node name="Models" expanded="True" />
               <Node name="Services" expanded="True" />
             </Node>
           </Node>
         </State>
       </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
       <Pad Id="MonoDevelop.UnitTesting.TestPad">
-        <State name="__root__">
-          <Node name="WebApi" expanded="True" />
-        </State>
+        <State name="__root__" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.WebApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
 </Properties>

@@ -1,66 +1,51 @@
-namespace WebApi.Models.Labels;
+namespace WebApi.Models.Locations;
  
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc; 
 
-public class CreateLabelRequest
-{
+public class CreateLocationRequest
+{ 
     [Required]
-    public string? Name { get; set; }
-
     public string? City { get; set; }
 
+    [Required]
     public string? State { get; set; }
 }
 
-public class UpdateLabelRequest
-{
-    public string? Name { get; set; }
-
+public class UpdateLocationRequest
+{  
     public string? City { get; set; }
 
     public string? State { get; set; }
 }
 
 [BindProperties]
-public class SearchLabelRequest
+public class SearchLocationRequest
 {
     [FromQuery]
     public string? Ids { get; set; }
 
     [FromQuery]
-    public string? NameLike { get; set; }
-
-    [FromQuery]
-    public string? City { get; set; }
-
-    [FromQuery]
-    public string? State { get; set; }
+    public string? CityOrStateLike { get; set; }
 }
 
-public class SearchLabelModel
+public class SearchLocationModel
 {
-    public List<Guid>? Ids { get; set; }
+    public List<Guid>? Ids { get; set; } 
 
-    public string? NameLike { get; set; }
-
-    public string? City { get; set; }
-
-    public string? State { get; set; }
+    public string? CityOrStateLike { get; set; }
 }
 
-public class LabelModel
+public class LocationModel
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
+    public Guid Id { get; set; } 
     public string? City { get; set; }
     public string? State { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
-    public LabelModel(Guid id, string name, string? city, string? state, DateTime createdAt, DateTime? updatedAt)
-    {
-        this.Name = name;
+    public LocationModel(Guid id, string? city, string? state, DateTime createdAt, DateTime? updatedAt)
+    { 
         this.Id = id;
         this.City = city;
         this.State = state;
@@ -69,19 +54,17 @@ public class LabelModel
     }
 }
 
-public class LabelDatabaseModel
+public class LocationDatabaseModel
 {
-    public Guid id { get; set; }
-    public string name { get; set; }
+    public Guid id { get; set; } 
     public string? city { get; set; }
     public string? state { get; set; }
     public DateTime created_at { get; set; }
     public DateTime? updated_at { get; set; }
     public long? full_count { get; set; }
 
-    LabelDatabaseModel(Guid id, string name, string? city, string? state, DateTime created_at, DateTime? updated_at)
-    {
-        this.name = name;
+    LocationDatabaseModel(Guid id, string? city, string? state, DateTime created_at, DateTime? updated_at)
+    { 
         this.id = id;
         this.city = city;
         this.state = state;
@@ -90,9 +73,8 @@ public class LabelDatabaseModel
     }
 
 
-    LabelDatabaseModel(Guid id, string name, string? city, string? state, DateTime created_at, DateTime? updated_at, long? full_count)
-    {
-        this.name = name;
+    LocationDatabaseModel(Guid id, string? city, string? state, DateTime created_at, DateTime? updated_at, long? full_count)
+    { 
         this.id = id;
         this.city = city;
         this.state = state;
@@ -102,18 +84,16 @@ public class LabelDatabaseModel
     }
 }
 
-public class LabelResponseModel
+public class LocationResponseModel
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
+    public Guid Id { get; set; } 
     public string? City { get; set; }
     public string? State { get; set; }
     public string CreatedAt { get; set; }
     public string? UpdatedAt { get; set; }
 
-    public LabelResponseModel(Guid id, string name, string? city, string? state, string createdAt, string? updatedAt)
-    {
-        this.Name = name;
+    public LocationResponseModel(Guid id, string? city, string? state, string createdAt, string? updatedAt)
+    { 
         this.Id = id;
         this.City = city;
         this.State = state;

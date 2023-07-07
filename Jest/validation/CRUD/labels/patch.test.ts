@@ -32,7 +32,7 @@ describe('Patch Label Tests', () => {
     const createdLabel = await createLabel(context, {}, entityMap)
 
     const updateModel : LabelUpdateModel = {
-      Name: "updateName" + generate(10),
+      Name: "updateName" + generate(12),
       City: "updateCity",
       State: "updateState"
     }

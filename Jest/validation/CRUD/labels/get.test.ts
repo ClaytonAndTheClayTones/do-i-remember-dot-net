@@ -100,7 +100,7 @@ describe('Get Label Tests', () => {
   it('Gets labels with nameLike filter', async () => {
     //just call with default values
 
-    const randomstring = generate(10);
+    const randomstring = generate(12);
     const labelResult1 = await createLabel(context, {Name: "testVal_" + randomstring}, entityMap)
     const labelResult2 = await createLabel(context, {Name: "AnotherTest_" + randomstring}, entityMap)
     const labelResult3 = await createLabel(context, {Name: "NoMatch_" + randomstring}, entityMap) 

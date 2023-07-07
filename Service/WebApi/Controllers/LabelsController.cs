@@ -3,10 +3,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Labels;
 using WebApi.Services;
-using WebApi.Adapters;
-using WebApi.Common;
-using System.Linq;
-using System.Reflection.Emit;
 using WebApi.Adapters.LabelAdapter;
 using WebApi.Models.Common;
 using WebApi.Adapters.Common;

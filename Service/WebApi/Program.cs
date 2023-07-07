@@ -1,11 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.Extensions.Options;
-using WebApi.Accessors;
-using WebApi.Adapters;
+﻿using System.Text.Json.Serialization; 
+using WebApi.Accessors; 
+using WebApi.Adapters.ArtistAdapter;
 using WebApi.Adapters.Common;
 using WebApi.Adapters.LabelAdapter;
-using WebApi.Helpers;
-using WebApi.Services;
+using WebApi.Adapters.LocationAdapter;
+using WebApi.Helpers; 
+using WebApi.Services; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,15 +27,22 @@ var builder = WebApplication.CreateBuilder(args);
 
     // configure strongly typed settings object
     services.Configure<DbSettings>(builder.Configuration.GetSection("DbSettings"));
+     
 
     // configure DI for application services
     services.AddSingleton<DataContext>();
     services.AddScoped<ILabelService, LabelService>();
     services.AddScoped<ILabelAccessor, LabelAccessor>();
     services.AddScoped<ILabelAdapter, LabelAdapter>();
+    services.AddScoped<ILocationService, LocationService>();
+    services.AddScoped<ILocationAccessor, LocationAccessor>();
+    services.AddScoped<ILocationAdapter, LocationAdapter>();
+    services.AddScoped<IArtistService, ArtistService>();
+    services.AddScoped<IArtistAccessor, ArtistAccessor>();
+    services.AddScoped<IArtistAdapter, ArtistAdapter>();
     services.AddScoped<IPagingAdapter, PagingAdapter>();
     services.AddScoped<IDbUtils, DbUtils>();
-    services.AddScoped<ICommonUtils, CommonUtils>();
+    services.AddScoped<ICommonUtils, CommonUtils>(); 
 }
 
 var app = builder.Build();

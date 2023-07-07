@@ -2,8 +2,7 @@ namespace WebApi.Accessors;
 
 using Dapper;
 using WebApi.Helpers;
-using WebApi.Models.Labels;
-using WebApi.Adapters;
+using WebApi.Models.Labels; 
 using System.Linq;
 using System.Collections.Generic;
 using WebApi.Adapters.LabelAdapter;
