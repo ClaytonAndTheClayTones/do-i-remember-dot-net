@@ -1,11 +1,8 @@
 ﻿namespace Helpers;
 
-using AutoMapper.Execution;
-using System.Xml.Linq;
-using Dapper;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Dapper; 
 using WebApi.Helpers;
-using WebApi.Models.Common;
+using WebApi.Models.Common; 
 
 public class TestType
 {
@@ -13,6 +10,69 @@ public class TestType
     public int? key2 { get; set; }
     public string? key3 { get; set; }
     public bool? key4 { get; set; }
+}
+
+[TestClass]
+public class BuildInsertQuery
+{
+    [TestMethod]
+    public void Generates_Valid_Insert_Query_And_Params()
+    {
+        // Arrange
+
+        TestType testObject = new TestType()
+        {
+            key1 = "value1",
+            key2 = 123,
+            key3 = null,
+            key4 = true
+        };
+
+        List<string> expectedParamNames = new List<string>()
+        { 
+            "key1",
+            "key2", 
+            "key4"
+        };
+
+        string expectedQuery =
+            $"INSERT INTO test_table" +
+            $"\n(" +
+            $"\n\tkey1," +
+            $"\n\tkey2," +
+            $"\n\tkey4" +
+            $"\n)" +
+            $"\nVALUES" +
+            $"\n(" +
+            $"\n\t@key1," +
+            $"\n\t@key2," +
+            $"\n\t@key4" +
+            $"\n)" +
+            $"\nRETURNING *;"; 
+         
+        var expectedParameters = new DynamicParameters();
+
+        expectedParameters.Add("key1", "value1");
+        expectedParameters.Add("key2", 123);
+        expectedParameters.Add("key4", true);
+
+        // Act
+
+        DbUtils dbUtils = new DbUtils();
+
+        InsertQueryPackage insertPackage = dbUtils.BuildInsertQuery("test_table", testObject);
+
+        // Assert
+
+        Assert.IsNotNull(insertPackage);
+        Assert.AreEqual(expectedQuery, insertPackage.sql);
+ 
+        CollectionAssert.AreEqual(expectedParamNames.Take(3).ToList(), insertPackage.parameters.ParameterNames.Take(3).ToList());
+
+        Assert.AreEqual(expectedParameters.Get<string>("key1"), insertPackage.parameters.Get<string>("key1"));
+        Assert.AreEqual(expectedParameters.Get<int>("key2"), insertPackage.parameters.Get<int>("key2"));
+        Assert.AreEqual(expectedParameters.Get<bool>("key4"), insertPackage.parameters.Get<bool>("key4"));  
+    }
 }
 
 [TestClass]

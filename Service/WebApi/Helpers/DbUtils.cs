@@ -1,6 +1,8 @@
-﻿using System.ComponentModel; 
+﻿using System.Collections.Generic;
+using System.ComponentModel; 
 using Dapper; 
 using WebApi.Models.Common;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebApi.Helpers
 {
@@ -271,13 +273,18 @@ namespace WebApi.Helpers
             return result;
         }
     }
-
-
-    public interface IDbUtils
+     
+    public class InsertQueryPackage
     {
-        UpdateQueryPackage? BuildUpdateQuery(string tableName, Guid id, object updateObject);
-        SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms, PagingInfo? pagingInfo, bool skipPaging = false);
-        void BuildPagingInfo(ref SelectQueryPackage package, PagingInfo? pagingInfo);
+        public string sql { get; set; }
+
+        public DynamicParameters parameters { get; set; }
+
+        public InsertQueryPackage(string sql, DynamicParameters parameters)
+        {
+            this.sql = sql;
+            this.parameters = parameters;
+        }
     }
 
     public class UpdateQueryPackage
@@ -292,6 +299,15 @@ namespace WebApi.Helpers
             this.parameters = parameters;
         }
     }
+
+    public interface IDbUtils
+    {
+        InsertQueryPackage BuildInsertQuery(string tableName, object insertObject);
+        UpdateQueryPackage? BuildUpdateQuery(string tableName, Guid id, object updateObject);
+        SelectQueryPackage BuildSelectQuery(string tableName, List<ISearchTerm> searchTerms, PagingInfo? pagingInfo, bool skipPaging = false);
+        void BuildPagingInfo(ref SelectQueryPackage package, PagingInfo? pagingInfo);
+    }
+
 
     public class SelectQueryPackage
     {
@@ -373,6 +389,49 @@ namespace WebApi.Helpers
             }
 
             return package;
+        }
+
+        public InsertQueryPackage BuildInsertQuery(string tableName, object insertObject)
+        {
+            Dictionary<string, object> insertDictionary = new Dictionary<string, object>();
+
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(insertObject))
+            {
+                object? value = property.GetValue(insertObject);
+
+                if (value != null)
+                {
+                    insertDictionary.Add(property.Name, value);
+                }
+            }
+
+            if (insertDictionary.Count == 0)
+            {
+                return null;
+            }
+
+  
+
+            string query = $"INSERT INTO {tableName}\n(";
+
+            int paramCount = 0;
+            string columnsString = "";
+            string valuesString = "";
+            DynamicParameters dbArgs = new DynamicParameters();
+
+            for (int i = 0; i < insertDictionary.Count; i++)
+            {
+
+                columnsString += $"{(paramCount++ > 0 ? "," : "")}\n\t{insertDictionary.Keys.ToList()[i]}";
+                valuesString += $"{(i > 0 ? "," : "")}\n\t@{insertDictionary.Keys.ToList()[i]}";
+                dbArgs.Add(insertDictionary.Keys.ToList()[i], insertDictionary.Values.ToList()[i]);
+            }
+
+            query += $"{columnsString}\n)\nVALUES\n({valuesString}\n)\nRETURNING *;";
+             
+            InsertQueryPackage result = new InsertQueryPackage(query, dbArgs);
+
+            return result;
         }
 
         public UpdateQueryPackage? BuildUpdateQuery(string tableName, Guid id, object updateObject)

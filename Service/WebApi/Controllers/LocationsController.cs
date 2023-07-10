@@ -23,7 +23,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateLocationRequest model)
+    public async Task<IActionResult> Create(LocationCreateRequest model)
     {
         LocationModel location = await _locationService.Create(model);
 
@@ -35,12 +35,12 @@ public class LocationsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Search(
         [FromQuery]
-        SearchLocationRequest request,
+        LocationSearchRequest request,
         [FromQuery]
         PagingRequestInfo paging
     )
     {
-        SearchLocationModel searchLocationModel = this._locationAdapter.convertFromRequestToSearchModel(request);
+        LocationSearchModel searchLocationModel = this._locationAdapter.convertFromRequestToSearchModel(request);
 
         PagingInfo pagingInfo = this._pagingAdapter.convertFromPagingRequestInfoToPagingInfo(paging);
 
@@ -77,7 +77,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> Update(Guid id, UpdateLocationRequest model)
+    public async Task<IActionResult> Update(Guid id, LocationUpdateRequest model)
     {
         LocationModel? location = await _locationService.Update(id, model);
 

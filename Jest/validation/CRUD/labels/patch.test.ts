@@ -1,6 +1,7 @@
 import { MusixApiContext } from '../../../QDK/contexts'
 import { TestEntityMap } from '../../../QDK/common'
 import { LabelUpdateModel, createLabel, updateLabel } from '../../../QDK/operators/labels'
+import { createLocation } from '../../../QDK/operators/locations'
 import { initConfig } from '../../../QDK/config'
 import { generate } from 'randomstring'
 
@@ -31,10 +32,11 @@ describe('Patch Label Tests', () => {
     //just call with default values
     const createdLabel = await createLabel(context, {}, entityMap)
 
+    const locationToUpdateTo = await createLocation(context, undefined, entityMap);
+    
     const updateModel : LabelUpdateModel = {
-      Name: "updateName" + generate(12),
-      City: "updateCity",
-      State: "updateState"
+      Name: "updateName" + generate(12), 
+      CurrentLocationId: locationToUpdateTo.data.Id
     }
 
     const updatedLabel = await updateLabel(context, createdLabel.data.Id, updateModel, undefined, false)

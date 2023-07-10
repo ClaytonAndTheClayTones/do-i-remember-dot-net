@@ -3,7 +3,7 @@ namespace WebApi.Models.Locations;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc; 
 
-public class CreateLocationRequest
+public class LocationCreateRequest
 { 
     [Required]
     public string? City { get; set; }
@@ -12,7 +12,7 @@ public class CreateLocationRequest
     public string? State { get; set; }
 }
 
-public class UpdateLocationRequest
+public class LocationUpdateRequest
 {  
     public string? City { get; set; }
 
@@ -20,7 +20,7 @@ public class UpdateLocationRequest
 }
 
 [BindProperties]
-public class SearchLocationRequest
+public class LocationSearchRequest
 {
     [FromQuery]
     public string? Ids { get; set; }
@@ -29,7 +29,7 @@ public class SearchLocationRequest
     public string? CityOrStateLike { get; set; }
 }
 
-public class SearchLocationModel
+public class LocationSearchModel
 {
     public List<Guid>? Ids { get; set; } 
 
@@ -63,7 +63,7 @@ public class LocationDatabaseModel
     public DateTime? updated_at { get; set; }
     public long? full_count { get; set; }
 
-    LocationDatabaseModel(Guid id, string? city, string? state, DateTime created_at, DateTime? updated_at)
+    public LocationDatabaseModel(Guid id, string? city, string? state, DateTime created_at, DateTime? updated_at)
     { 
         this.id = id;
         this.city = city;
@@ -71,15 +71,10 @@ public class LocationDatabaseModel
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
-
-
-    LocationDatabaseModel(Guid id, string? city, string? state, DateTime created_at, DateTime? updated_at, long? full_count)
-    { 
-        this.id = id;
-        this.city = city;
-        this.state = state;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+     
+    public LocationDatabaseModel(Guid id, string? city, string? state, DateTime created_at, DateTime? updated_at, long? full_count)
+        : this(id, city, state, created_at, updated_at)
+    {  
         this.full_count = full_count;
     }
 }

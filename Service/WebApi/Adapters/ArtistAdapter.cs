@@ -2,15 +2,10 @@ namespace WebApi.Adapters.ArtistAdapter;
 
 using WebApi.Models.Artists;
 using WebApi.Helpers;
+using WebApi.Adapters.Common;
 
-public interface IArtistAdapter
-{
-    ArtistResponseModel convertFromModelToResponseModel(ArtistModel model);
-    SearchArtistModel convertFromRequestToSearchModel(SearchArtistRequest request);
-    List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchArtistModel? model);
-    ArtistModel convertFromDatabaseModelToModel(ArtistDatabaseModel model);
-}
-
+public interface IArtistAdapter : IModelAdapter<ArtistCreateRequest, ArtistUpdateRequest, ArtistSearchRequest, ArtistDatabaseModel, ArtistModel, ArtistSearchModel, ArtistResponseModel> { }
+  
 public class ArtistAdapter : IArtistAdapter
 {
     ICommonUtils _commonUtils;
@@ -21,16 +16,14 @@ public class ArtistAdapter : IArtistAdapter
     }
 
     public ArtistResponseModel convertFromModelToResponseModel(ArtistModel model)
-    {
-
-        string dateFounded = model.DateFounded.ToString("s");
+    {  
         ArtistResponseModel responseModel = new ArtistResponseModel(
             id: model.Id,
             currentLabelId: model.CurrentLabelId,
             currentLocationId: model.CurrentLocationId,
             name: model.Name,
-            dateFounded: dateFounded,
-            dateDisbanded: model.DateDisbanded != null ? $"{model.DateDisbanded:s}" : null,
+            dateFounded: model.DateFounded.ToString("O"),
+            dateDisbanded: model.DateDisbanded != null ? $"{model.DateDisbanded:O}" : null,
             createdAt: model.CreatedAt.ToString("s"),
             updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
         );
@@ -54,9 +47,9 @@ public class ArtistAdapter : IArtistAdapter
         return responseModel;
     }
 
-    public SearchArtistModel convertFromRequestToSearchModel(SearchArtistRequest request)
+    public ArtistSearchModel convertFromRequestToSearchModel(ArtistSearchRequest request)
     {
-        SearchArtistModel result = new SearchArtistModel();
+        ArtistSearchModel result = new ArtistSearchModel();
 
         if (request.Ids != null)
         {
@@ -74,14 +67,14 @@ public class ArtistAdapter : IArtistAdapter
         }
 
         result.NameLike = request.NameLike;
-
+ 
         result.DateFoundedMin = request.DateFoundedMin;
         result.DateFoundedMax = request.DateFoundedMax;
 
         return result;
     }
 
-    public List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchArtistModel? model)
+    public List<ISearchTerm> convertFromSearchModelToSearchTerms(ArtistSearchModel? model)
     {
         List<ISearchTerm> searchTerms = new List<ISearchTerm>();
 
@@ -107,17 +100,40 @@ public class ArtistAdapter : IArtistAdapter
                 searchTerms.Add(new LikeSearchTerm("name", model.NameLike, LikeTypes.Like));
             }
 
-            if (model.DateFoundedMin != null)
+            if (model.DateFoundedMin != null || model.DateFoundedMax != null)
             {
-                searchTerms.Add(new ExactMatchSearchTerm<DateOnly?>("city", model.DateFoundedMin, true));
-            }
+                searchTerms.Add(new DateRangeSearchTerm(
+                    "date_founded",
+                    model.DateFoundedMin == null ? null : ((DateOnly)model.DateFoundedMin).ToDateTime(TimeOnly.MinValue),
+                    model.DateFoundedMax == null ? null : ((DateOnly)model.DateFoundedMax).ToDateTime(TimeOnly.MinValue)));
 
-            if (model.DateFoundedMax != null)
-            {
-                searchTerms.Add(new ExactMatchSearchTerm<DateOnly?>("city", model.DateFoundedMax, true));
-            }  
-        }
+            }
+         }
 
         return searchTerms;
+    }
+
+    public object convertFromCreateRequestToDatabaseModel(ArtistCreateRequest model)
+    {
+        return new
+        {
+            current_label_id = model.CurrentLabelId,
+            current_location_id = model.CurrentLocationId,
+            name = model.Name,
+            date_founded = model.DateFounded != null ? ((DateOnly)model.DateFounded).ToDateTime(TimeOnly.MinValue) : new DateTime(),
+            date_disbanded = model.DateDisbanded != null ? (DateTime?)((DateOnly)model.DateDisbanded).ToDateTime(TimeOnly.MinValue) : null
+        };
+    }
+
+    public object convertFromUpdateRequestToDatabaseModel(ArtistUpdateRequest model)
+    {
+        return new
+        {
+            current_label_id = model.CurrentLabelId,
+            current_location_id = model.CurrentLocationId,
+            name = model.Name,
+            date_founded = model.DateFounded != null ? ((DateOnly)model.DateFounded).ToDateTime(TimeOnly.MinValue) : new DateTime(),
+            date_disbanded = model.DateDisbanded != null ? (DateTime?)((DateOnly)model.DateDisbanded).ToDateTime(TimeOnly.MinValue) : null
+        };
     }
 }

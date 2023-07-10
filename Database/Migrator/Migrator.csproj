@@ -13,6 +13,8 @@
     <None Remove="Database\001.do.installUuidExtension.sql" />
     <None Remove="Database\002.do.createLabelsTable.sql" />
     <None Remove="Database\002.do %28copy%29.createLabelsTable.sql" />
+    <None Remove="Database\004.do %28copy%29.createArtistsTable.sql" />
+    <None Remove="Database\005.do %28copy%29.createAlbumsTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\" />
@@ -26,13 +28,19 @@
     <Content Include="Database\001.do.installUuidExtension.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Database\002.do.createLabelsTable.sql">
+    <Content Include="Database\003.do.createLabelsTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Database\004.do.createArtistsTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Database\003.do.createLocationsTable.sql">
+    <Content Include="Database\002.do.createLocationsTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\005.do.createAlbumsTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\006.do.createAlbumArtistLinkTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

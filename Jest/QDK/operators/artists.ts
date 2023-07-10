@@ -27,9 +27,14 @@ export type ArtistUpdateModel = {
  
 export type ArtistSearchModel = PagingRequestInfo & {
     Ids?: string[],
+    CurrentLocationIds? : string[],
+    CurrentLabelIds? : string[],
+    
     NameLike?: string,
-    City?: string,
-    State?: string
+
+    DateFoundedMin?: string,
+    DateFoundedMax?: string
+
 }
  
 export const mintDefaultArtist = async function (musixContext: MusixApiContext, overrides: Partial<ArtistCreateModel> = {}, testEntityMap? : TestEntityMap, axiosConfig?: AxiosRequestConfig): Promise<Partial<ArtistCreateModel>> {

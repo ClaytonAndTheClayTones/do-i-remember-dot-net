@@ -1,10 +1,10 @@
 import { MusixApiContext } from '../../../QDK/contexts'
 import { TestEntityMap } from '../../../QDK/common'
-import { createArtist } from '../../../QDK/operators/artists'
+import { createAlbum } from '../../../QDK/operators/albums'
 import { initConfig } from '../../../QDK/config'
 import { qapost } from '../../../QDK/qaxios'
 
-describe('Post Artist Tests', () => {
+describe('Post Album Tests', () => {
   let entityMap: TestEntityMap = new TestEntityMap()
 
   beforeEach(async () => {
@@ -27,14 +27,14 @@ describe('Post Artist Tests', () => {
     } 
   })
 
-  it('Posts a valid artist', async () => {
+  it('Posts a valid album', async () => {
     //just call with default values
-    await createArtist(context, {}, entityMap)
+    await createAlbum(context, {}, entityMap)
   })
 
-  it('Gets errors for an empty artist', async () => {
+  it('Gets errors for an empty album', async () => {
     //just call with default values
-    const result = await qapost(context.url + "/artists", {});
+    const result = await qapost(context.url + "/albums", {});
     expect(result.status).toEqual(400);
  
     expect(Object.keys(result.data.errors).length).toEqual(2);
@@ -43,14 +43,14 @@ describe('Post Artist Tests', () => {
     expect(result.data.errors["Name"].length).toEqual(1);
     expect(result.data.errors["Name"][0]).toEqual('The Name field is required.'); 
 
-    expect(result.data.errors["DateFounded"]).toBeTruthy();
-    expect(result.data.errors["DateFounded"].length).toEqual(1);
-    expect(result.data.errors["DateFounded"][0]).toEqual('The DateFounded field is required.'); 
+    expect(result.data.errors["DateReleased"]).toBeTruthy();
+    expect(result.data.errors["DateReleased"].length).toEqual(1);
+    expect(result.data.errors["DateReleased"][0]).toEqual('The DateReleased field is required.'); 
   })
 
-  it('Gets errors for an invalid artist', async () => {
+  it('Gets errors for an invalid album', async () => {
     //just call with default values
-    const result = await qapost(context.url + "/artists", {});
+    const result = await qapost(context.url + "/albums", {});
     expect(result.status).toEqual(400);
  
     expect(Object.keys(result.data.errors).length).toEqual(2);
@@ -59,9 +59,9 @@ describe('Post Artist Tests', () => {
     expect(result.data.errors["Name"].length).toEqual(1);
     expect(result.data.errors["Name"][0]).toEqual('The Name field is required.'); 
 
-    expect(result.data.errors["DateFounded"]).toBeTruthy();
-    expect(result.data.errors["DateFounded"].length).toEqual(1);
-    expect(result.data.errors["DateFounded"][0]).toEqual('The DateFounded field is required.'); 
+    expect(result.data.errors["DateReleased"]).toBeTruthy();
+    expect(result.data.errors["DateReleased"].length).toEqual(1);
+    expect(result.data.errors["DateReleased"][0]).toEqual('The DateReleased field is required.'); 
   })
 })
 

@@ -4,6 +4,21 @@ using System.Linq;
 using WebApi.Models.Common;
 using WebApi.Helpers;
 
+
+public interface IModelAdapter<TCreateRequest, TUpdateRequest, TSearchRequest, TDatabaseModel, TModel, TSearchModel, TResponse>
+{
+    TSearchModel convertFromRequestToSearchModel(TSearchRequest request);
+
+    object convertFromCreateRequestToDatabaseModel(TCreateRequest model);
+    object convertFromUpdateRequestToDatabaseModel(TUpdateRequest model);
+    List<ISearchTerm> convertFromSearchModelToSearchTerms(TSearchModel? model);
+
+    TModel convertFromDatabaseModelToModel(TDatabaseModel model);
+
+    TResponse convertFromModelToResponseModel(TModel model);
+}
+
+
 public interface IPagingAdapter
 {
     PagingInfo convertFromPagingRequestInfoToPagingInfo(PagingRequestInfo model, int defaultPageLength = 25, int maxPageLength = 200);

@@ -10,10 +10,10 @@ using WebApi.Models.Common;
 
 public interface ILocationAccessor
 {
-    Task<PagedList<LocationModel>> Search(SearchLocationModel? searchModel, PagingInfo? paging);
+    Task<PagedList<LocationModel>> Search(LocationSearchModel? searchModel, PagingInfo? paging);
     Task<LocationModel?> GetById(Guid id);
-    Task<LocationModel> Create(CreateLocationRequest Location);
-    Task<LocationModel?> Update(Guid id, UpdateLocationRequest Location);
+    Task<LocationModel> Create(LocationCreateRequest Location);
+    Task<LocationModel?> Update(Guid id, LocationUpdateRequest Location);
     Task<LocationModel?> Delete(Guid id);
 }
 
@@ -30,7 +30,7 @@ public class LocationAccessor : ILocationAccessor
         _locationAdapter = LocationAdapter;
     }
 
-    public async Task<PagedList<LocationModel>> Search(SearchLocationModel? searchModel, PagingInfo? paging)
+    public async Task<PagedList<LocationModel>> Search(LocationSearchModel? searchModel, PagingInfo? paging)
     {
         using var connection = _context.CreateConnection();
 
@@ -87,24 +87,16 @@ public class LocationAccessor : ILocationAccessor
         }
     }
 
-    public async Task<LocationModel> Create(CreateLocationRequest Location)
+    public async Task<LocationModel> Create(LocationCreateRequest location)
     {
 
         try
         {
             using var connection = _context.CreateConnection();
-            var sql = """
-            INSERT INTO Locations (city, state)
-            VALUES (@city, @state)
-            RETURNING *
-        """;
 
+            var insertPackage = this._dbUtils.BuildInsertQuery("locations", this._locationAdapter.convertFromCreateRequestToDatabaseModel(location));
 
-            var result = await connection.QuerySingleAsync<LocationDatabaseModel>(sql, new
-            { 
-                city = Location.City,
-                state = Location.State
-            });
+            var result = await connection.QuerySingleAsync<LocationDatabaseModel>(insertPackage.sql, insertPackage.parameters);
 
             var model = this._locationAdapter.convertFromDatabaseModelToModel(result);
 
@@ -116,15 +108,11 @@ public class LocationAccessor : ILocationAccessor
         }
     }
 
-    public async Task<LocationModel?> Update(Guid id, UpdateLocationRequest Location)
+    public async Task<LocationModel?> Update(Guid id, LocationUpdateRequest location)
     {
         using var connection = _context.CreateConnection();
 
-        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("Locations", id, new
-        { 
-            city = Location.City,
-            state = Location.State
-        });
+        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("locations", id, this._locationAdapter.convertFromUpdateRequestToDatabaseModel(location));
 
         if (updateQuery == null)
         {

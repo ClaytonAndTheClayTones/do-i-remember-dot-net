@@ -2,14 +2,9 @@ namespace WebApi.Adapters.LocationAdapter;
 
 using WebApi.Models.Locations;
 using WebApi.Helpers;
+using WebApi.Adapters.Common;
 
-public interface ILocationAdapter
-{
-    LocationResponseModel convertFromModelToResponseModel(LocationModel model);
-    SearchLocationModel convertFromRequestToSearchModel(SearchLocationRequest request);
-    List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLocationModel? model);
-    LocationModel convertFromDatabaseModelToModel(LocationDatabaseModel model);
-}
+public interface ILocationAdapter : IModelAdapter<LocationCreateRequest, LocationUpdateRequest, LocationSearchRequest, LocationDatabaseModel, LocationModel, LocationSearchModel, LocationResponseModel> { }
 
 public class LocationAdapter : ILocationAdapter
 {
@@ -46,9 +41,28 @@ public class LocationAdapter : ILocationAdapter
         return responseModel;
     }
 
-    public SearchLocationModel convertFromRequestToSearchModel(SearchLocationRequest request)
+
+    public object convertFromCreateRequestToDatabaseModel(LocationCreateRequest model)
     {
-        SearchLocationModel result = new SearchLocationModel();
+        return new
+        {
+            city = model.City,
+            state = model.State
+        };
+    }
+
+    public object convertFromUpdateRequestToDatabaseModel(LocationUpdateRequest model)
+    {
+        return new
+        {
+            city = model.City,
+            state = model.State
+        };
+    }
+
+    public LocationSearchModel convertFromRequestToSearchModel(LocationSearchRequest request)
+    {
+        LocationSearchModel result = new LocationSearchModel();
 
         if (request.Ids != null)
         {
@@ -60,7 +74,7 @@ public class LocationAdapter : ILocationAdapter
         return result;
     }
 
-    public List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLocationModel? model)
+    public List<ISearchTerm> convertFromSearchModelToSearchTerms(LocationSearchModel? model)
     {
         List<ISearchTerm> searchTerms = new List<ISearchTerm>();
 

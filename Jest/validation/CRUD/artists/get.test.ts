@@ -1,8 +1,8 @@
 import { MusixApiContext } from '../../../QDK/contexts'
-import { TestEntityMap } from '../../../QDK/common'
+import { TestEntityMap, sortByKey } from '../../../QDK/common'
 import { ArtistSearchModel, createArtist, getArtistById, searchArtists } from '../../../QDK/operators/artists'
 import { initConfig } from '../../../QDK/config'
-import { generate } from 'randomstring'
+import { generate } from 'randomstring' 
 
 describe('Get Artist Tests', () => {
   let entityMap: TestEntityMap = new TestEntityMap()
@@ -119,7 +119,135 @@ describe('Get Artist Tests', () => {
     expect(artistsRetrieved.data.Items[0]).toHaveSamePropertiesAs(artistResult1.data);
     expect(artistsRetrieved.data.Items[1]).toHaveSamePropertiesAs(artistResult2.data);
   }) 
+  
+  it('Gets labels with currentLocationIds filter', async () => {
+    //just call with default valueateArtist
+   
+    const artistResult1 = await createArtist(context, {}, entityMap)
+    const artistResult2 = await createArtist(context, {}, entityMap)
+    const artistResult3 = await createArtist(context, {CurrentLocationId : artistResult1.data.CurrentLocationId}, entityMap) 
+    const artistResult4 = await createArtist(context, {}, entityMap) 
+
+    const searchModel : ArtistSearchModel = {
+      Ids: [artistResult1.data.Id, artistResult2.data.Id, artistResult3.data.Id, artistResult4.data.Id],
+      CurrentLocationIds: [artistResult1.data.CurrentLocationId, artistResult4.data.CurrentLocationId]
+    }
+
+    const artistsRetrieved = await searchArtists(context, searchModel); 
+
+    expect(artistsRetrieved.status).toEqual(200);
+
+    expect(artistsRetrieved.data.Items.length).toEqual(3);
+
+    sortByKey(artistsRetrieved.data.Items, 'createdAt');
+     
+    expect(artistsRetrieved.data.Items[0]).toHaveSamePropertiesAs(artistResult1.data);
+    expect(artistsRetrieved.data.Items[1]).toHaveSamePropertiesAs(artistResult3.data); 
+    expect(artistsRetrieved.data.Items[2]).toHaveSamePropertiesAs(artistResult4.data); 
+  })  
  
+  it('Gets labels with currentLabelIds filter', async () => {
+    //just call with default valueateArtist
+   
+    const artistResult1 = await createArtist(context, {}, entityMap)
+    const artistResult2 = await createArtist(context, {}, entityMap)
+    const artistResult3 = await createArtist(context, {CurrentLabelId : artistResult1.data.CurrentLabelId}, entityMap) 
+    const artistResult4 = await createArtist(context, {}, entityMap) 
+
+    const searchModel : ArtistSearchModel = {
+      Ids: [artistResult1.data.Id, artistResult2.data.Id, artistResult3.data.Id, artistResult4.data.Id],
+      CurrentLabelIds: [artistResult1.data.CurrentLabelId, artistResult4.data.CurrentLabelId]
+    }
+
+    const artistsRetrieved = await searchArtists(context, searchModel); 
+
+    expect(artistsRetrieved.status).toEqual(200);
+
+    expect(artistsRetrieved.data.Items.length).toEqual(3);
+
+    sortByKey(artistsRetrieved.data.Items, 'createdAt');
+     
+    expect(artistsRetrieved.data.Items[0]).toHaveSamePropertiesAs(artistResult1.data);
+    expect(artistsRetrieved.data.Items[1]).toHaveSamePropertiesAs(artistResult3.data); 
+    expect(artistsRetrieved.data.Items[2]).toHaveSamePropertiesAs(artistResult4.data); 
+  })  
+ 
+  it('Gets labels with DateFoundedMin filter', async () => {
+    //just call with default valueateArtist
+   
+    const artistResult1 = await createArtist(context, {DateFounded: '2005-05-05'}, entityMap)
+    const artistResult2 = await createArtist(context, {DateFounded: '2005-05-06'}, entityMap)
+    const artistResult3 = await createArtist(context, {DateFounded: '2005-05-07'}, entityMap) 
+    const artistResult4 = await createArtist(context, {DateFounded: '2005-05-08'}, entityMap) 
+
+    const searchModel : ArtistSearchModel = {
+      Ids: [artistResult1.data.Id, artistResult2.data.Id, artistResult3.data.Id, artistResult4.data.Id],
+      DateFoundedMin: artistResult3.data.DateFounded
+    }
+ 
+    const artistsRetrieved = await searchArtists(context, searchModel); 
+
+    expect(artistsRetrieved.status).toEqual(200);
+
+    expect(artistsRetrieved.data.Items.length).toEqual(2);
+
+    sortByKey(artistsRetrieved.data.Items, 'createdAt');
+      
+    expect(artistsRetrieved.data.Items[0]).toHaveSamePropertiesAs(artistResult3.data); 
+    expect(artistsRetrieved.data.Items[1]).toHaveSamePropertiesAs(artistResult4.data); 
+  })  
+
+  it('Gets labels with DateFoundedMax filter', async () => {
+    //just call with default valueateArtist
+   
+    const artistResult1 = await createArtist(context, {DateFounded: '2005-05-05'}, entityMap)
+    const artistResult2 = await createArtist(context, {DateFounded: '2005-05-06'}, entityMap)
+    const artistResult3 = await createArtist(context, {DateFounded: '2005-05-07'}, entityMap) 
+    const artistResult4 = await createArtist(context, {DateFounded: '2005-05-08'}, entityMap) 
+
+    const searchModel : ArtistSearchModel = {
+      Ids: [artistResult1.data.Id, artistResult2.data.Id, artistResult3.data.Id, artistResult4.data.Id],
+      DateFoundedMax: artistResult3.data.DateFounded
+    }
+ 
+    const artistsRetrieved = await searchArtists(context, searchModel); 
+
+    expect(artistsRetrieved.status).toEqual(200);
+
+    expect(artistsRetrieved.data.Items.length).toEqual(3);
+
+    sortByKey(artistsRetrieved.data.Items, 'createdAt');
+      
+    expect(artistsRetrieved.data.Items[0]).toHaveSamePropertiesAs(artistResult1.data);  
+    expect(artistsRetrieved.data.Items[1]).toHaveSamePropertiesAs(artistResult2.data);  
+    expect(artistsRetrieved.data.Items[2]).toHaveSamePropertiesAs(artistResult3.data);  
+  })  
+
+  it('Gets labels with DateFoundedMax filter', async () => {
+    //just call with default valueateArtist
+   
+    const artistResult1 = await createArtist(context, {DateFounded: '2005-05-05'}, entityMap)
+    const artistResult2 = await createArtist(context, {DateFounded: '2005-05-06'}, entityMap)
+    const artistResult3 = await createArtist(context, {DateFounded: '2005-05-07'}, entityMap) 
+    const artistResult4 = await createArtist(context, {DateFounded: '2005-05-08'}, entityMap) 
+
+    const searchModel : ArtistSearchModel = {
+      Ids: [artistResult1.data.Id, artistResult2.data.Id, artistResult3.data.Id, artistResult4.data.Id],
+      DateFoundedMin: artistResult2.data.DateFounded,
+      DateFoundedMax: artistResult3.data.DateFounded
+    }
+ 
+    const artistsRetrieved = await searchArtists(context, searchModel); 
+
+    expect(artistsRetrieved.status).toEqual(200);
+
+    expect(artistsRetrieved.data.Items.length).toEqual(2);
+
+    sortByKey(artistsRetrieved.data.Items, 'createdAt');
+      
+    expect(artistsRetrieved.data.Items[0]).toHaveSamePropertiesAs(artistResult2.data);  
+    expect(artistsRetrieved.data.Items[1]).toHaveSamePropertiesAs(artistResult3.data);   
+  })  
 })
 
 

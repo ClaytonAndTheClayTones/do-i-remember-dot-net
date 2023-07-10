@@ -2,7 +2,7 @@
     id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     current_label_id uuid NULL,
     current_location_id uuid NULL,
-    name TEXT NOT NULL,
+    name CITEXT NOT NULL,
     date_founded DATE NOT NULL,
     date_disbanded DATE NULL,
     created_at timestamp(3) DEFAULT NOW(),
@@ -26,11 +26,13 @@ ALTER TABLE artists
           
 ALTER TABLE artists
       ADD CONSTRAINT fk_artists_label_id FOREIGN KEY (current_label_id)
-          REFERENCES labels (id);
+          REFERENCES labels (id)
+          ON DELETE SET NULL;
           
 ALTER TABLE artists
       DROP CONSTRAINT IF EXISTS fk_artists_location_id;  
 
 ALTER TABLE artists
       ADD CONSTRAINT fk_artists_location_id FOREIGN KEY (current_location_id) 
-          REFERENCES locations (id);
+          REFERENCES locations (id)
+          ON DELETE SET NULL;

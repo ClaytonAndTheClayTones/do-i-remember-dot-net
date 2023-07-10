@@ -1,8 +1,6 @@
 ﻿<Properties StartupConfiguration="{C76D56E9-CB74-4387-A2B0-32CE1AC47381}|Default">
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/claytonstetz/Documents/GitHub/do-i-remember-dot-net/Database/Migrator/Program.cs" relfile="Program.cs" line="66" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
@@ -10,23 +8,21 @@
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
     <Files>
-      <File FileName="Program.cs" Line="66" Column="1" />
-      <File FileName="appsettings.json" Line="4" Column="32" />
-      <File FileName="Database/002.do.createLabelsTable.sql" Line="2" Column="13" />
-      <File FileName="Database/003.do.createArtistsTable.sql" Line="24" Column="1" />
-      <File FileName="Database/003.do.createLocationsTable.sql" Line="15" Column="66" />
-      <File FileName="Database/001.do.installUuidExtension.sql" Line="4" Column="39" />
+      <File FileName="Program.cs" Line="70" Column="6" />
+      <File FileName="appsettings.json" />
+      <File FileName="Database/002.do.createLabelsTable.sql" Line="21" Column="31" />
+      <File FileName="Database/003.do.createLocationsTable.sql" Line="14" Column="1" />
+      <File FileName="Database/001.do.installUuidExtension.sql" />
+      <File FileName="Database/004.do.createArtistsTable.sql" Line="5" Column="16" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="MusixMigrator">
             <Node name="Migrator">
-              <Node name="Dependencies" expanded="True">
-                <Node name="PackageDependencies" expanded="True" />
+              <Node name="Database" expanded="True">
+                <Node name="004.do.createArtistsTable.sql" selected="True" />
               </Node>
-              <Node name="Database" expanded="True" />
-              <Node name="Program.cs" selected="True" />
             </Node>
           </Node>
         </State>

@@ -6,10 +6,10 @@ using WebApi.Models.Common;
 
 public interface ILabelService
 {
-    Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? pagingModel);
+    Task<PagedList<LabelModel>> Search(LabelSearchModel? searchModel, PagingInfo? pagingModel);
     Task<LabelModel?> GetById(Guid id);
-    Task<LabelModel> Create(CreateLabelRequest model);
-    Task<LabelModel?> Update(Guid id, UpdateLabelRequest model);
+    Task<LabelModel> Create(LabelCreateRequest model);
+    Task<LabelModel?> Update(Guid id, LabelUpdateRequest model);
     Task<LabelModel?> Delete(Guid id);
 }
 
@@ -22,7 +22,7 @@ public class LabelService : ILabelService
         _labelAccessor = labelAccessor;
     }
 
-    public async Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? pagingModel)
+    public async Task<PagedList<LabelModel>> Search(LabelSearchModel? searchModel, PagingInfo? pagingModel)
     {
         return await _labelAccessor.Search(searchModel, pagingModel);
     }
@@ -39,13 +39,13 @@ public class LabelService : ILabelService
         return label;
     }
 
-    public async Task<LabelModel> Create(CreateLabelRequest model)
+    public async Task<LabelModel> Create(LabelCreateRequest model)
     {
         // save label
         return await _labelAccessor.Create(model);
     }
 
-    public async Task<LabelModel?> Update(Guid id, UpdateLabelRequest model)
+    public async Task<LabelModel?> Update(Guid id, LabelUpdateRequest model)
     {
         // save label
         return await this._labelAccessor.Update(id, model);

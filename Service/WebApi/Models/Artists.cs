@@ -3,7 +3,7 @@ namespace WebApi.Models.Artists;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-public class CreateArtistRequest
+public class ArtistCreateRequest
 {
     [Required]
     public string? Name { get; set; }
@@ -13,12 +13,12 @@ public class CreateArtistRequest
     public Guid? CurrentLabelId { get; set; }
 
     [Required]
-    public DateOnly DateFounded { get; set; }
+    public DateOnly? DateFounded { get; set; }
      
     public DateOnly? DateDisbanded { get; set; }
 }
 
-public class UpdateArtistRequest
+public class ArtistUpdateRequest
 {
     public string? Name { get; set; }
 
@@ -32,7 +32,7 @@ public class UpdateArtistRequest
 }
 
 [BindProperties]
-public class SearchArtistRequest
+public class ArtistSearchRequest
 {
     [FromQuery]
     public string? Ids { get; set; }
@@ -53,7 +53,7 @@ public class SearchArtistRequest
     public DateOnly? DateFoundedMax { get; set; } 
 }
 
-public class SearchArtistModel
+public class ArtistSearchModel
 {
     public List<Guid>? Ids { get; set; }
      
@@ -82,7 +82,7 @@ public class ArtistModel
     public ArtistModel(Guid id, Guid? currentLabelId, Guid? currentLocationId, string name, DateOnly dateFounded, DateOnly? dateDisbanded, DateTime createdAt, DateTime? updatedAt)
     {
         this.Id = id;
-        this.CurrentLabelId = CurrentLabelId;
+        this.CurrentLabelId = currentLabelId;
         this.CurrentLocationId = currentLocationId;
 
         this.Name = name;
@@ -106,7 +106,7 @@ public class ArtistDatabaseModel
     public DateTime? updated_at { get; set; }
     public long? full_count { get; set; }
 
-    ArtistDatabaseModel(Guid id, Guid? current_label_id, Guid? current_location_id, string name, DateTime date_founded, DateTime? date_disbanded, DateTime created_at, DateTime? updated_at)
+    public ArtistDatabaseModel(Guid id, Guid? current_label_id, Guid? current_location_id, string name, DateTime date_founded, DateTime? date_disbanded, DateTime created_at, DateTime? updated_at)
     {
         this.id = id;
         this.current_label_id = current_label_id;
@@ -118,16 +118,9 @@ public class ArtistDatabaseModel
         this.updated_at = updated_at;
     }
 
-    ArtistDatabaseModel(Guid id, Guid? current_label_id, Guid? current_location_id, string name, DateTime date_founded, DateTime? date_disbanded, DateTime created_at, DateTime? updated_at, long full_count)
-    {
-        this.id = id;
-        this.current_label_id = current_label_id;
-        this.current_location_id = current_location_id;
-        this.name = name;
-        this.date_founded = date_founded;
-        this.date_disbanded = date_disbanded;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+    public ArtistDatabaseModel(Guid id, Guid? current_label_id, Guid? current_location_id, string name, DateTime date_founded, DateTime? date_disbanded, DateTime created_at, DateTime? updated_at, long full_count)
+        : this(id, current_label_id, current_location_id, name, date_founded, date_disbanded, created_at, updated_at)
+    { 
         this.full_count = full_count;
     }
 

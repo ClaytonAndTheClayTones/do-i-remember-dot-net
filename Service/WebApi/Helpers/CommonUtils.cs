@@ -1,15 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using Dapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WebApi.Helpers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebApi.Helpers
-{
-
+{    
     public interface ICommonUtils
     {
-        List<Guid> ConvertDelimitedStringToGuidList(string input, string? delimiter = ",");
+        List<Guid> ConvertDelimitedStringToGuidList(string input, string? delimiter = ","); 
     }
 
 
@@ -40,7 +43,7 @@ namespace WebApi.Helpers
 
     public static class CommonExtensions
     {
-        public static bool IsNumber(this Object value)
+        public static bool IsNumber(this System.Object value)
         {
             return value is sbyte
          || value is byte

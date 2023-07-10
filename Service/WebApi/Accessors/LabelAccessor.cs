@@ -10,10 +10,10 @@ using WebApi.Models.Common;
 
 public interface ILabelAccessor
 {
-    Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? paging);
+    Task<PagedList<LabelModel>> Search(LabelSearchModel? searchModel, PagingInfo? paging);
     Task<LabelModel?> GetById(Guid id);
-    Task<LabelModel> Create(CreateLabelRequest label);
-    Task<LabelModel?> Update(Guid id, UpdateLabelRequest label);
+    Task<LabelModel> Create(LabelCreateRequest label);
+    Task<LabelModel?> Update(Guid id, LabelUpdateRequest label);
     Task<LabelModel?> Delete(Guid id);
 }
 
@@ -30,7 +30,7 @@ public class LabelAccessor : ILabelAccessor
         _labelAdapter = labelAdapter;
     }
 
-    public async Task<PagedList<LabelModel>> Search(SearchLabelModel? searchModel, PagingInfo? paging)
+    public async Task<PagedList<LabelModel>> Search(LabelSearchModel? searchModel, PagingInfo? paging)
     {
         using var connection = _context.CreateConnection();
 
@@ -87,25 +87,15 @@ public class LabelAccessor : ILabelAccessor
         }
     }
 
-    public async Task<LabelModel> Create(CreateLabelRequest label)
-    {
-
+    public async Task<LabelModel> Create(LabelCreateRequest label)
+    { 
         try
         {
             using var connection = _context.CreateConnection();
-            var sql = """
-            INSERT INTO labels (name, city, state)
-            VALUES (@name, @city, @state)
-            RETURNING *
-        """;
 
-
-            var result = await connection.QuerySingleAsync<LabelDatabaseModel>(sql, new
-            {
-                name = label.Name,
-                city = label.City,
-                state = label.State
-            });
+            var insertPackage = this._dbUtils.BuildInsertQuery("labels", this._labelAdapter.convertFromCreateRequestToDatabaseModel(label));
+ 
+            var result = await connection.QuerySingleAsync<LabelDatabaseModel>(insertPackage.sql, insertPackage.parameters);
 
             var model = this._labelAdapter.convertFromDatabaseModelToModel(result);
 
@@ -117,16 +107,11 @@ public class LabelAccessor : ILabelAccessor
         }
     }
 
-    public async Task<LabelModel?> Update(Guid id, UpdateLabelRequest label)
+    public async Task<LabelModel?> Update(Guid id, LabelUpdateRequest label)
     {
         using var connection = _context.CreateConnection();
 
-        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("labels", id, new
-        {
-            name = label.Name,
-            city = label.City,
-            state = label.State
-        });
+        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("labels", id, this._labelAdapter.convertFromUpdateRequestToDatabaseModel(label));
 
         if (updateQuery == null)
         {

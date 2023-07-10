@@ -2,15 +2,10 @@ namespace WebApi.Adapters.LabelAdapter;
 
 using WebApi.Models.Labels;
 using WebApi.Helpers;
+using WebApi.Adapters.Common;
 
-public interface ILabelAdapter
-{
-    LabelResponseModel convertFromModelToResponseModel(LabelModel model);
-    SearchLabelModel convertFromRequestToSearchModel(SearchLabelRequest request);
-    List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLabelModel? model);
-    LabelModel convertFromDatabaseModelToModel(LabelDatabaseModel model);
-}
-
+public interface ILabelAdapter : IModelAdapter<LabelCreateRequest, LabelUpdateRequest, LabelSearchRequest, LabelDatabaseModel, LabelModel, LabelSearchModel, LabelResponseModel> { }
+ 
 public class LabelAdapter : ILabelAdapter
 {
     ICommonUtils _commonUtils;
@@ -25,8 +20,7 @@ public class LabelAdapter : ILabelAdapter
         LabelResponseModel responseModel = new LabelResponseModel(
             id: model.Id,
             name: model.Name,
-            city: model.City,
-            state: model.State,
+            currentLocationId: model.CurrentLocationId,
             createdAt: model.CreatedAt.ToString("s"),
             updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
         );
@@ -39,8 +33,7 @@ public class LabelAdapter : ILabelAdapter
         LabelModel responseModel = new LabelModel(
             id: model.id,
             name: model.name,
-            city: model.city,
-            state: model.state,
+            currentLocationId: model.current_location_id,
             createdAt: model.created_at,
             updatedAt: model.updated_at
         );
@@ -48,23 +41,26 @@ public class LabelAdapter : ILabelAdapter
         return responseModel;
     }
 
-    public SearchLabelModel convertFromRequestToSearchModel(SearchLabelRequest request)
+    public LabelSearchModel convertFromRequestToSearchModel(LabelSearchRequest request)
     {
-        SearchLabelModel result = new SearchLabelModel();
+        LabelSearchModel result = new LabelSearchModel();
 
         if (request.Ids != null)
         {
             result.Ids = this._commonUtils.ConvertDelimitedStringToGuidList(request.Ids);
         }
 
-        result.NameLike = request.NameLike;
-        result.City = request.City;
-        result.State = request.State;
+        if (request.CurrentLocationIds != null)
+        {
+            result.CurrentLocationIds = this._commonUtils.ConvertDelimitedStringToGuidList(request.CurrentLocationIds);
+        }
+
+        result.NameLike = request.NameLike; 
 
         return result;
     }
 
-    public List<ISearchTerm> convertFromSearchModelToSearchTerms(SearchLabelModel? model)
+    public List<ISearchTerm> convertFromSearchModelToSearchTerms(LabelSearchModel? model)
     {
         List<ISearchTerm> searchTerms = new List<ISearchTerm>();
 
@@ -75,22 +71,35 @@ public class LabelAdapter : ILabelAdapter
                 searchTerms.Add(new InArraySearchTerm<Guid>("id", model.Ids));
             }
 
+            if (model.CurrentLocationIds != null && model.CurrentLocationIds.Count > 0)
+            {
+                searchTerms.Add(new InArraySearchTerm<Guid>("current_location_id", model.CurrentLocationIds));
+            }
+
             if (model.NameLike != null)
             {
                 searchTerms.Add(new LikeSearchTerm("name", model.NameLike, LikeTypes.Like));
-            }
-
-            if (model.City != null)
-            {
-                searchTerms.Add(new ExactMatchSearchTerm<string>("city", model.City, true));
-            }
-
-            if (model.State != null)
-            {
-                searchTerms.Add(new ExactMatchSearchTerm<string>("state", model.State, true));
-            }
+            } 
         }
 
         return searchTerms;
+    } 
+
+    public object convertFromCreateRequestToDatabaseModel(LabelCreateRequest model)
+    {
+        return new
+        {
+            name = model.Name,
+            current_location_id = model.CurrentLocationId
+        };
+    }
+
+    public object convertFromUpdateRequestToDatabaseModel(LabelUpdateRequest model)
+    {
+        return new
+        {
+            name = model.Name,
+            current_location_id = model.CurrentLocationId
+        };
     }
 }

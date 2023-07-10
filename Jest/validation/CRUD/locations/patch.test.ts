@@ -30,10 +30,10 @@ describe('Patch Location Tests', () => {
   it('Patches a valid location', async () => {
     //just call with default values
     const createdLocation = await createLocation(context, {}, entityMap)
-
+ 
     const updateModel : LocationUpdateModel = { 
       City: "updateCity:" + generate(12),
-      State: "updateState"
+      State: "updateState",  
     }
 
     const updatedLocation = await updateLocation(context, createdLocation.data.Id, updateModel, undefined, false)

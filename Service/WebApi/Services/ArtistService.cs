@@ -6,10 +6,10 @@ using WebApi.Models.Common;
 
 public interface IArtistService
 {
-    Task<PagedList<ArtistModel>> Search(SearchArtistModel? searchModel, PagingInfo? pagingModel);
+    Task<PagedList<ArtistModel>> Search(ArtistSearchModel? searchModel, PagingInfo? pagingModel);
     Task<ArtistModel?> GetById(Guid id);
-    Task<ArtistModel> Create(CreateArtistRequest model);
-    Task<ArtistModel?> Update(Guid id, UpdateArtistRequest model);
+    Task<ArtistModel> Create(ArtistCreateRequest model);
+    Task<ArtistModel?> Update(Guid id, ArtistUpdateRequest model);
     Task<ArtistModel?> Delete(Guid id);
 }
 
@@ -22,7 +22,7 @@ public class ArtistService : IArtistService
         _artistAccessor = artistAccessor;
     }
 
-    public async Task<PagedList<ArtistModel>> Search(SearchArtistModel? searchModel, PagingInfo? pagingModel)
+    public async Task<PagedList<ArtistModel>> Search(ArtistSearchModel? searchModel, PagingInfo? pagingModel)
     {
         return await _artistAccessor.Search(searchModel, pagingModel);
     }
@@ -39,13 +39,13 @@ public class ArtistService : IArtistService
         return artist;
     }
 
-    public async Task<ArtistModel> Create(CreateArtistRequest model)
+    public async Task<ArtistModel> Create(ArtistCreateRequest model)
     {
         // save artist
         return await _artistAccessor.Create(model);
     }
 
-    public async Task<ArtistModel?> Update(Guid id, UpdateArtistRequest model)
+    public async Task<ArtistModel?> Update(Guid id, ArtistUpdateRequest model)
     {
         // save artist
         return await this._artistAccessor.Update(id, model);

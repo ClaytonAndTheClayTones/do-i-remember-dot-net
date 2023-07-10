@@ -6,10 +6,10 @@ using WebApi.Models.Common;
 
 public interface ILocationService
 {
-    Task<PagedList<LocationModel>> Search(SearchLocationModel? searchModel, PagingInfo? pagingModel);
+    Task<PagedList<LocationModel>> Search(LocationSearchModel? searchModel, PagingInfo? pagingModel);
     Task<LocationModel?> GetById(Guid id);
-    Task<LocationModel> Create(CreateLocationRequest model);
-    Task<LocationModel?> Update(Guid id, UpdateLocationRequest model);
+    Task<LocationModel> Create(LocationCreateRequest model);
+    Task<LocationModel?> Update(Guid id, LocationUpdateRequest model);
     Task<LocationModel?> Delete(Guid id);
 }
 
@@ -22,7 +22,7 @@ public class LocationService : ILocationService
         _locationAccessor = locationAccessor;
     }
 
-    public async Task<PagedList<LocationModel>> Search(SearchLocationModel? searchModel, PagingInfo? pagingModel)
+    public async Task<PagedList<LocationModel>> Search(LocationSearchModel? searchModel, PagingInfo? pagingModel)
     {
         return await _locationAccessor.Search(searchModel, pagingModel);
     }
@@ -39,13 +39,13 @@ public class LocationService : ILocationService
         return location;
     }
 
-    public async Task<LocationModel> Create(CreateLocationRequest model)
+    public async Task<LocationModel> Create(LocationCreateRequest model)
     {
         // save location
         return await _locationAccessor.Create(model);
     }
 
-    public async Task<LocationModel?> Update(Guid id, UpdateLocationRequest model)
+    public async Task<LocationModel?> Update(Guid id, LocationUpdateRequest model)
     {
         // save location
         return await this._locationAccessor.Update(id, model);

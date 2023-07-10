@@ -10,10 +10,10 @@ using WebApi.Models.Common;
 
 public interface IArtistAccessor
 {
-    Task<PagedList<ArtistModel>> Search(SearchArtistModel? searchModel, PagingInfo? paging);
+    Task<PagedList<ArtistModel>> Search(ArtistSearchModel? searchModel, PagingInfo? paging);
     Task<ArtistModel?> GetById(Guid id);
-    Task<ArtistModel> Create(CreateArtistRequest artist);
-    Task<ArtistModel?> Update(Guid id, UpdateArtistRequest artist);
+    Task<ArtistModel> Create(ArtistCreateRequest artist);
+    Task<ArtistModel?> Update(Guid id, ArtistUpdateRequest artist);
     Task<ArtistModel?> Delete(Guid id);
 }
 
@@ -30,7 +30,7 @@ public class ArtistAccessor : IArtistAccessor
         _artistAdapter = artistAdapter;
     }
 
-    public async Task<PagedList<ArtistModel>> Search(SearchArtistModel? searchModel, PagingInfo? paging)
+    public async Task<PagedList<ArtistModel>> Search(ArtistSearchModel? searchModel, PagingInfo? paging)
     {
         using var connection = _context.CreateConnection();
 
@@ -87,28 +87,16 @@ public class ArtistAccessor : IArtistAccessor
         }
     }
 
-    public async Task<ArtistModel> Create(CreateArtistRequest artist)
+    public async Task<ArtistModel> Create(ArtistCreateRequest artist)
     {
 
         try
         {
             using var connection = _context.CreateConnection();
-            var sql = """
-            INSERT INTO artists (current_label_id, current_location_id, name, date_founded, date_disbanded)
-            VALUES (@current_label_id, @current_location_id, @name, @date_founded, @date_disbanded)
-            RETURNING *
-        """; 
 
+            var insertPackage = this._dbUtils.BuildInsertQuery("artists", this._artistAdapter.convertFromCreateRequestToDatabaseModel(artist));
 
-             
-            var result = await connection.QuerySingleAsync<ArtistDatabaseModel>(sql, new
-            {
-                current_label_id = artist.CurrentLabelId,
-                current_location_id = artist.CurrentLocationId,
-                name = artist.Name,
-                date_founded = artist.DateFounded.ToDateTime(TimeOnly.MinValue),
-                date_disbanded = artist.DateDisbanded != null ? (DateTime?)((DateOnly)artist.DateDisbanded).ToDateTime(TimeOnly.MinValue) : null
-            });
+            var result = await connection.QuerySingleAsync<ArtistDatabaseModel>(insertPackage.sql, insertPackage.parameters);
 
             var model = this._artistAdapter.convertFromDatabaseModelToModel(result);
 
@@ -120,18 +108,11 @@ public class ArtistAccessor : IArtistAccessor
         }
     }
 
-    public async Task<ArtistModel?> Update(Guid id, UpdateArtistRequest artist)
+    public async Task<ArtistModel?> Update(Guid id, ArtistUpdateRequest artist)
     {
         using var connection = _context.CreateConnection();
 
-        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("artists", id, new
-        {
-            current_label_id = artist.CurrentLabelId,
-            current_location_id = artist.CurrentLocationId,
-            name = artist.Name,
-            date_founded = artist.DateFounded,
-            date_disbanded = artist.DateDisbanded 
-        });
+        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("artists", id, this._artistAdapter.convertFromUpdateRequestToDatabaseModel(artist));
 
         if (updateQuery == null)
         {

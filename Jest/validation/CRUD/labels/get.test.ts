@@ -1,5 +1,5 @@
 import { MusixApiContext } from '../../../QDK/contexts'
-import { TestEntityMap } from '../../../QDK/common'
+import { TestEntityMap, sortByKey } from '../../../QDK/common'
 import { LabelSearchModel, createLabel, getLabelById, searchLabels } from '../../../QDK/operators/labels'
 import { initConfig } from '../../../QDK/config'
 import { generate } from 'randomstring'
@@ -118,51 +118,33 @@ describe('Get Label Tests', () => {
 
     expect(labelsRetrieved.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
     expect(labelsRetrieved.data.Items[1]).toHaveSamePropertiesAs(labelResult2.data); 
-  }) 
+  })  
 
-  it('Gets labels with city filter', async () => {
+  it('Gets labels with currentLocationIds filter', async () => {
     //just call with default values
- 
-    const labelResult1 = await createLabel(context, {City: "BeefTown"}, entityMap)
-    const labelResult2 = await createLabel(context, {City: "NOT BEEF TOWN"}, entityMap)
-    const labelResult3 = await createLabel(context, {City: "beefTown"}, entityMap) 
+   
+    const labelResult1 = await createLabel(context, {}, entityMap)
+    const labelResult2 = await createLabel(context, {}, entityMap)
+    const labelResult3 = await createLabel(context, {CurrentLocationId : labelResult1.data.CurrentLocationId}, entityMap) 
+    const labelResult4 = await createLabel(context, {}, entityMap) 
 
     const searchModel : LabelSearchModel = {
-      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id],
-      City: "BeefTown"
+      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id, labelResult4.data.Id],
+      CurrentLocationIds: [labelResult1.data.CurrentLocationId, labelResult4.data.CurrentLocationId]
     }
 
     const labelsRetrieved = await searchLabels(context, searchModel); 
 
     expect(labelsRetrieved.status).toEqual(200);
 
-    expect(labelsRetrieved.data.Items.length).toEqual(2);
+    expect(labelsRetrieved.data.Items.length).toEqual(3);
 
+    sortByKey(labelsRetrieved.data.Items, 'createdAt');
+     
     expect(labelsRetrieved.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
     expect(labelsRetrieved.data.Items[1]).toHaveSamePropertiesAs(labelResult3.data); 
-  }) 
-
-  it('Gets labels with state filter', async () => {
-    //just call with default values
- 
-    const labelResult1 = await createLabel(context, {State: "The State Of Beef"}, entityMap)
-    const labelResult2 = await createLabel(context, {State: "thE StaTe of BEEF"}, entityMap)
-    const labelResult3 = await createLabel(context, {State: "THE STATE OF PORK"}, entityMap) 
-
-    const searchModel : LabelSearchModel = {
-      Ids: [labelResult1.data.Id, labelResult2.data.Id, labelResult3.data.Id],
-      State: "thE StaTe of BEEF"
-    }
-
-    const labelsRetrieved = await searchLabels(context, searchModel); 
-
-    expect(labelsRetrieved.status).toEqual(200);
-
-    expect(labelsRetrieved.data.Items.length).toEqual(2);
-
-    expect(labelsRetrieved.data.Items[0]).toHaveSamePropertiesAs(labelResult1.data);
-    expect(labelsRetrieved.data.Items[1]).toHaveSamePropertiesAs(labelResult2.data); 
-  }) 
+    expect(labelsRetrieved.data.Items[2]).toHaveSamePropertiesAs(labelResult4.data); 
+  })  
 })
 
 

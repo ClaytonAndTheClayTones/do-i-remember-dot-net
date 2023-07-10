@@ -3,8 +3,8 @@ import { TestEntityMap } from '../../../QDK/common'
 import { ArtistUpdateModel, createArtist, updateArtist } from '../../../QDK/operators/artists'
 import { initConfig } from '../../../QDK/config'
 import { generate } from 'randomstring'
-import { createLabel } from 'QDK/operators/labels'
-import { createLocation } from 'QDK/operators/locations'
+import { createLabel } from '../../../QDK/operators/labels'
+import { createLocation } from '../../../QDK/operators/locations'
 
 describe('Patch Artist Tests', () => {
   let entityMap: TestEntityMap = new TestEntityMap()
@@ -38,8 +38,8 @@ describe('Patch Artist Tests', () => {
 
     const updateModel : ArtistUpdateModel = {
       Name: "updateName" + generate(12),
-      CurrentLabelId: labelToUpdateTo.data.id,
-      CurrentLocationId: locationToUpdateTo.data.id,
+      CurrentLabelId: labelToUpdateTo.data.Id,
+      CurrentLocationId: locationToUpdateTo.data.Id,
       DateFounded: "2003-03-03",
       DateDisbanded: "2004-04-04" 
     }

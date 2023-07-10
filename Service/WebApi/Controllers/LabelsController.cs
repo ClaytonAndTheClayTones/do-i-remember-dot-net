@@ -23,7 +23,7 @@ public class LabelsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateLabelRequest model)
+    public async Task<IActionResult> Create(LabelCreateRequest model)
     {
         LabelModel label = await _labelService.Create(model);
 
@@ -35,12 +35,12 @@ public class LabelsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Search(
         [FromQuery]
-        SearchLabelRequest request,
+        LabelSearchRequest request,
         [FromQuery]
         PagingRequestInfo paging
     )
     {
-        SearchLabelModel searchLabelModel = this._labelAdapter.convertFromRequestToSearchModel(request);
+        LabelSearchModel searchLabelModel = this._labelAdapter.convertFromRequestToSearchModel(request);
 
         PagingInfo pagingInfo = this._pagingAdapter.convertFromPagingRequestInfoToPagingInfo(paging);
 
@@ -77,7 +77,7 @@ public class LabelsController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> Update(Guid id, UpdateLabelRequest model)
+    public async Task<IActionResult> Update(Guid id, LabelUpdateRequest model)
     {
         LabelModel? label = await _labelService.Update(id, model);
 

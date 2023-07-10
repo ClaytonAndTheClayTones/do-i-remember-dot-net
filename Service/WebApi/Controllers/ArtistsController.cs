@@ -23,7 +23,7 @@ public class ArtistsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateArtistRequest model)
+    public async Task<IActionResult> Create(ArtistCreateRequest model)
     {
         ArtistModel label = await _artistService.Create(model);
 
@@ -35,12 +35,12 @@ public class ArtistsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Search(
         [FromQuery]
-        SearchArtistRequest request,
+        ArtistSearchRequest request,
         [FromQuery]
         PagingRequestInfo paging
     )
     {
-        SearchArtistModel searchArtistModel = this._artistAdapter.convertFromRequestToSearchModel(request);
+        ArtistSearchModel searchArtistModel = this._artistAdapter.convertFromRequestToSearchModel(request);
 
         PagingInfo pagingInfo = this._pagingAdapter.convertFromPagingRequestInfoToPagingInfo(paging);
 
@@ -77,7 +77,7 @@ public class ArtistsController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> Update(Guid id, UpdateArtistRequest model)
+    public async Task<IActionResult> Update(Guid id, ArtistUpdateRequest model)
     {
         ArtistModel? label = await _artistService.Update(id, model);
 

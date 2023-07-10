@@ -100,14 +100,15 @@ describe('Get Location Tests', () => {
   it('Gets locations with CityOrStateLike filter', async () => {
     //just call with default values
 
-    const randomstring = generate(12);
-    const locationResult1 = await createLocation(context, { City: "testCity:" + randomstring, State: "notMatchingState" }, entityMap)
-    const locationResult2 = await createLocation(context, { City: "notMatchingCity:" + randomstring, State: "testState" }, entityMap)
-    const locationResult3 = await createLocation(context, { City: "notMatchingCity:" + randomstring, State: "notMatchingState" }, entityMap) 
+    const randomstringToMatch = generate(12); 
+    const randomstringToNotMatch = generate(12); 
+    const locationResult1 = await createLocation(context, { City: "ATestCity:" + randomstringToMatch, State: "notMatchingState:" + randomstringToNotMatch }, entityMap)
+    const locationResult2 = await createLocation(context, { City: "ANotMatchingCity:" + randomstringToNotMatch, State: "testState:" + randomstringToMatch }, entityMap)
+    const locationResult3 = await createLocation(context, { City: "ANotMatchingCity:" + randomstringToNotMatch, State: "notMatchingState:" + randomstringToNotMatch }, entityMap) 
 
     const searchModel : LocationSearchModel = {
       Ids: [locationResult1.data.Id, locationResult2.data.Id, locationResult3.data.Id],
-      CityOrStateLike: "test"
+      CityOrStateLike: randomstringToMatch
     }
 
     const locationsRetrieved = await searchLocations(context, searchModel); 

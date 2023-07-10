@@ -3,32 +3,36 @@ import { MusixApiContext } from '../../QDK/contexts';
 import { qadelete, qaget, qapatch, qapost } from '../../QDK/qaxios';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { generate } from 'randomstring';
+import { LocationCreateModel, createLocation } from './locations';
 
 
 export type LabelCreateModel = {
-    Name: string,
-    City?: string,
-    State?: string
+    CurrentLocationId?: string,
+    CurrentLocation?: Partial<LocationCreateModel>,
+    Name: string
 } 
 
 export type LabelUpdateModel = {
-    Name?: string,
-    City?: string,
-    State?: string
+    CurrentLocationId?: string,
+    Name?: string
 }
  
 export type LabelSearchModel = PagingRequestInfo & {
     Ids?: string[],
-    NameLike?: string,
-    City?: string,
-    State?: string
-}
+    CurrentLocationIds?: string[],
+    NameLike?: string
+}  
  
-export const mintDefaultLabel = async function (overrides: Partial<LabelCreateModel> = {}): Promise<Partial<LabelCreateModel>> {
+export const mintDefaultLabel = async function (musixContext: MusixApiContext, overrides: Partial<LabelCreateModel> = {}, testEntityMap? : TestEntityMap, axiosConfig?: AxiosRequestConfig): Promise<Partial<LabelCreateModel>> {
     const defaultLabel: LabelCreateModel = {
-        Name: "testName" + generate(12),
-        City: "testCity",
-        State: "testState"
+        Name: "testName" + generate(12), 
+    }
+ 
+    if(!overrides.CurrentLocationId)
+    {
+        const newLocation = await createLocation(musixContext, overrides.CurrentLocation, testEntityMap, axiosConfig)
+
+        overrides.CurrentLocationId = newLocation.data.Id; 
     }
 
     Object.assign(defaultLabel, overrides);
@@ -38,7 +42,7 @@ export const mintDefaultLabel = async function (overrides: Partial<LabelCreateMo
 
 export const createLabel = async function (musixContext: MusixApiContext, overrides: Partial<LabelCreateModel> = {}, testEntityMap?: TestEntityMap, axiosConfig?: AxiosRequestConfig, allowFailures: boolean = false) : Promise<AxiosResponse<Record<string,any>>> {
      
-    const labelToPost = await mintDefaultLabel(overrides);
+    const labelToPost = await mintDefaultLabel(musixContext, overrides, testEntityMap, axiosConfig);
 
     const result = await qapost(musixContext.url + "/labels", labelToPost, axiosConfig);
 

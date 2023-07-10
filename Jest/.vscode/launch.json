@@ -50,7 +50,7 @@
           "runtimeArgs": [
             "--inspect-brk",
             "${workspaceRoot}/node_modules/.bin/jest",
-            "${fileBasenameNoExtension}",
+            "${fileDirname}/${fileBasenameNoExtension}",
             "--runInBand",
             "--coverage=false"
           ], 
