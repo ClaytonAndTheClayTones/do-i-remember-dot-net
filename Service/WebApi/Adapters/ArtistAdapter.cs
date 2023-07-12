@@ -4,7 +4,7 @@ using WebApi.Models.Artists;
 using WebApi.Helpers;
 using WebApi.Adapters.Common;
 
-public interface IArtistAdapter : IModelAdapter<ArtistCreateRequest, ArtistUpdateRequest, ArtistSearchRequest, ArtistDatabaseModel, ArtistModel, ArtistSearchModel, ArtistResponseModel> { }
+public interface IArtistAdapter : IModelAdapter<ArtistCreateRequest, ArtistSearchRequest, ArtistDatabaseModel, ArtistModel, ArtistSearchModel, ArtistResponseModel>, IUpdateModelAdapter<ArtistUpdateRequest> { }
   
 public class ArtistAdapter : IArtistAdapter
 {

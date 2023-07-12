@@ -1,13 +1,18 @@
 ﻿using System.Text.Json.Serialization;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Accessors;
 using WebApi.Adapters.AlbumAdapter;
+using WebApi.Adapters.AlbumArtistLinkAdapter;
 using WebApi.Adapters.ArtistAdapter;
 using WebApi.Adapters.Common;
 using WebApi.Adapters.LabelAdapter;
 using WebApi.Adapters.LocationAdapter;
-using WebApi.Helpers; 
-using WebApi.Services; 
+using WebApi.Helpers;
+using WebApi.Models.AlbumArtistLinks;
+using WebApi.Services;
+using WebApi.Validators;
+using WebApi.Validators.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     // configure strongly typed settings object
     services.Configure<DbSettings>(builder.Configuration.GetSection("DbSettings"));
-     
+    services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
     // configure DI for application services
     services.AddSingleton<DataContext>();
@@ -45,9 +50,14 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<IAlbumService, AlbumService>();
     services.AddScoped<IAlbumAccessor, AlbumAccessor>();
     services.AddScoped<IAlbumAdapter, AlbumAdapter>();
+    services.AddScoped<IAlbumArtistLinkService, AlbumArtistLinkService>();
+    services.AddScoped<IAlbumArtistLinkAccessor, AlbumArtistLinkAccessor>();
+    services.AddScoped<IAlbumArtistLinkAdapter, AlbumArtistLinkAdapter>();
     services.AddScoped<IPagingAdapter, PagingAdapter>();
     services.AddScoped<IDbUtils, DbUtils>();
-    services.AddScoped<ICommonUtils, CommonUtils>(); 
+    services.AddScoped<ICommonUtils, CommonUtils>();
+    services.AddScoped<ICommonValidators, CommonValidators>();
+    services.AddScoped<IValidator<AlbumArtistLinkCreateRequest>, AlbumArtistLinkPostValidator>();
 }
 
 var app = builder.Build();

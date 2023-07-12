@@ -4,7 +4,7 @@ using WebApi.Models.Albums;
 using WebApi.Helpers;
 using WebApi.Adapters.Common;
 
-public interface IAlbumAdapter : IModelAdapter<AlbumCreateRequest, AlbumUpdateRequest, AlbumSearchRequest, AlbumDatabaseModel, AlbumModel, AlbumSearchModel, AlbumResponseModel> { }
+public interface IAlbumAdapter : IModelAdapter<AlbumCreateRequest, AlbumSearchRequest, AlbumDatabaseModel, AlbumModel, AlbumSearchModel, AlbumResponseModel>, IUpdateModelAdapter<AlbumUpdateRequest> { }
   
 public class AlbumAdapter : IAlbumAdapter
 {

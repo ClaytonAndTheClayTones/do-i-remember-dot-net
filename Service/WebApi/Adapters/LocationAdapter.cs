@@ -4,7 +4,7 @@ using WebApi.Models.Locations;
 using WebApi.Helpers;
 using WebApi.Adapters.Common;
 
-public interface ILocationAdapter : IModelAdapter<LocationCreateRequest, LocationUpdateRequest, LocationSearchRequest, LocationDatabaseModel, LocationModel, LocationSearchModel, LocationResponseModel> { }
+public interface ILocationAdapter : IModelAdapter<LocationCreateRequest, LocationSearchRequest, LocationDatabaseModel, LocationModel, LocationSearchModel, LocationResponseModel>, IUpdateModelAdapter<LocationUpdateRequest> { }
 
 public class LocationAdapter : ILocationAdapter
 {

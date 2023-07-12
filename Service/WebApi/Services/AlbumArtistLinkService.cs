@@ -8,8 +8,7 @@ public interface IAlbumArtistLinkService
 {
     Task<PagedList<AlbumArtistLinkModel>> Search(AlbumArtistLinkSearchModel? searchModel, PagingInfo? pagingModel);
     Task<AlbumArtistLinkModel?> GetById(Guid id);
-    Task<AlbumArtistLinkModel> Create(AlbumArtistLinkCreateRequest model);
-    Task<AlbumArtistLinkModel?> Update(Guid id, AlbumArtistLinkUpdateRequest model);
+    Task<AlbumArtistLinkModel> Create(AlbumArtistLinkCreateRequest model); 
     Task<AlbumArtistLinkModel?> Delete(Guid id);
 }
 
@@ -44,13 +43,7 @@ public class AlbumArtistLinkService : IAlbumArtistLinkService
         // save albumArtistLink
         return await _albumArtistLinkAccessor.Create(model);
     }
-
-    public async Task<AlbumArtistLinkModel?> Update(Guid id, AlbumArtistLinkUpdateRequest model)
-    {
-        // save albumArtistLink
-        return await this._albumArtistLinkAccessor.Update(id, model);
-    }
-
+  
     public async Task<AlbumArtistLinkModel?> Delete(Guid id)
     {
         return await this._albumArtistLinkAccessor.Delete(id);

@@ -12,6 +12,7 @@
         <PackageReference Include="Dapper" Version="2.0.143" />
         <PackageReference Include="Npgsql" Version="7.0.4" />
         <PackageReference Include="ErikEJ.EntityFrameworkCore.SqlServer.DateOnlyTimeOnly" Version="7.0.5" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     </ItemGroup>
     <ItemGroup>
       <Content Update="Properties\launchSettings.json">

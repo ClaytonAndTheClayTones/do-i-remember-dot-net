@@ -4,7 +4,7 @@ using WebApi.Models.AlbumArtistLinks;
 using WebApi.Helpers;
 using WebApi.Adapters.Common;
 
-public interface IAlbumArtistLinkAdapter : IModelAdapter<AlbumArtistLinkCreateRequest, AlbumArtistLinkUpdateRequest, AlbumArtistLinkSearchRequest, AlbumArtistLinkDatabaseModel, AlbumArtistLinkModel, AlbumArtistLinkSearchModel, AlbumArtistLinkResponseModel> { }
+public interface IAlbumArtistLinkAdapter : IModelAdapter<AlbumArtistLinkCreateRequest, AlbumArtistLinkSearchRequest, AlbumArtistLinkDatabaseModel, AlbumArtistLinkModel, AlbumArtistLinkSearchModel, AlbumArtistLinkResponseModel> { }
   
 public class AlbumArtistLinkAdapter : IAlbumArtistLinkAdapter
 {
@@ -94,17 +94,8 @@ public class AlbumArtistLinkAdapter : IAlbumArtistLinkAdapter
     {
         return new
         {
-            album_id = model.AlbumId,
-            artist_id = model.ArtistId 
+            album_id = Guid.Parse(model.AlbumId),
+            artist_id = Guid.Parse(model.ArtistId) 
         };
-    }
-
-    public object convertFromUpdateRequestToDatabaseModel(AlbumArtistLinkUpdateRequest model)
-    {
-        return new
-        {
-            album_id = model.AlbumId,
-            artist_id = model.ArtistId
-        };
-    }
+    } 
 }

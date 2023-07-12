@@ -2,9 +2,9 @@ namespace WebApi.Adapters.LabelAdapter;
 
 using WebApi.Models.Labels;
 using WebApi.Helpers;
-using WebApi.Adapters.Common;
+using WebApi.Adapters.Common; 
 
-public interface ILabelAdapter : IModelAdapter<LabelCreateRequest, LabelUpdateRequest, LabelSearchRequest, LabelDatabaseModel, LabelModel, LabelSearchModel, LabelResponseModel> { }
+public interface ILabelAdapter : IModelAdapter<LabelCreateRequest, LabelSearchRequest, LabelDatabaseModel, LabelModel, LabelSearchModel, LabelResponseModel>, IUpdateModelAdapter<LabelUpdateRequest> { }
  
 public class LabelAdapter : ILabelAdapter
 {

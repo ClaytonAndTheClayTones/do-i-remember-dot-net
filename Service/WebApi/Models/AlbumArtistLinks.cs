@@ -2,21 +2,13 @@ namespace WebApi.Models.AlbumArtistLinks;
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models.Validators;
 
 public class AlbumArtistLinkCreateRequest
-{ 
-    [Required]
-    public Guid? AlbumId { get; set; }
-
-    [Required]
-    public Guid? ArtistId { get; set; }
-}
-
-public class AlbumArtistLinkUpdateRequest
 {  
-    public Guid? AlbumId { get; set; }
-
-    public Guid? ArtistId { get; set; }
+    public string? AlbumId { get; set; }
+ 
+    public string? ArtistId { get; set; }
 }
 
 [BindProperties]

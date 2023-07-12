@@ -12,8 +12,7 @@ public interface IAlbumArtistLinkAccessor
 {
     Task<PagedList<AlbumArtistLinkModel>> Search(AlbumArtistLinkSearchModel? searchModel, PagingInfo? paging);
     Task<AlbumArtistLinkModel?> GetById(Guid id);
-    Task<AlbumArtistLinkModel> Create(AlbumArtistLinkCreateRequest albumAlbumArtistLinkLink);
-    Task<AlbumArtistLinkModel?> Update(Guid id, AlbumArtistLinkUpdateRequest albumAlbumArtistLinkLink);
+    Task<AlbumArtistLinkModel> Create(AlbumArtistLinkCreateRequest albumAlbumArtistLinkLink); 
     Task<AlbumArtistLinkModel?> Delete(Guid id);
 }
 
@@ -107,32 +106,7 @@ public class AlbumArtistLinkAccessor : IAlbumArtistLinkAccessor
             throw ex;
         }
     }
-
-    public async Task<AlbumArtistLinkModel?> Update(Guid id, AlbumArtistLinkUpdateRequest albumAlbumArtistLinkLink)
-    {
-        using var connection = _context.CreateConnection();
-
-        UpdateQueryPackage? updateQuery = this._dbUtils.BuildUpdateQuery("album_artist_links", id, this._albumAlbumArtistLinkLinkAdapter.convertFromUpdateRequestToDatabaseModel(albumAlbumArtistLinkLink));
-
-        if (updateQuery == null)
-        {
-            return await GetById(id);
-        }
-
-        var result = await connection.QuerySingleOrDefaultAsync<AlbumArtistLinkDatabaseModel>(updateQuery.sql, updateQuery.parameters);
-
-        if (result != null)
-        {
-            var model = this._albumAlbumArtistLinkLinkAdapter.convertFromDatabaseModelToModel(result);
-
-            return model;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
+     
     public async Task<AlbumArtistLinkModel?> Delete(Guid id)
     {
         using var connection = _context.CreateConnection();

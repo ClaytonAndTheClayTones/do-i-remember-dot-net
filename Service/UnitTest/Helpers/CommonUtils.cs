@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using WebApi.Helpers;
+﻿using WebApi.Helpers;
 
 namespace Helpers;
- 
+
 [TestClass]
 public class ConvertDelimitedStringToGuidList
 {

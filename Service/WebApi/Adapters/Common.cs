@@ -1,16 +1,18 @@
 namespace WebApi.Adapters.Common;
-
-using System.Linq;
+ 
 using WebApi.Models.Common;
 using WebApi.Helpers;
 
+public interface IUpdateModelAdapter<TUpdateRequest>
+{ 
+    object convertFromUpdateRequestToDatabaseModel(TUpdateRequest model);
+}
 
-public interface IModelAdapter<TCreateRequest, TUpdateRequest, TSearchRequest, TDatabaseModel, TModel, TSearchModel, TResponse>
+public interface IModelAdapter<TCreateRequest, TSearchRequest, TDatabaseModel, TModel, TSearchModel, TResponse>
 {
     TSearchModel convertFromRequestToSearchModel(TSearchRequest request);
 
-    object convertFromCreateRequestToDatabaseModel(TCreateRequest model);
-    object convertFromUpdateRequestToDatabaseModel(TUpdateRequest model);
+    object convertFromCreateRequestToDatabaseModel(TCreateRequest model); 
     List<ISearchTerm> convertFromSearchModelToSearchTerms(TSearchModel? model);
 
     TModel convertFromDatabaseModelToModel(TDatabaseModel model);
