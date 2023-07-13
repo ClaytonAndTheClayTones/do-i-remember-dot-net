@@ -1,7 +1,7 @@
 ﻿CREATE TABLE IF NOT EXISTS album_artist_links (
     id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    artist_id uuid NOT NULL,
     album_id uuid NOT NULL,  
+    artist_id uuid NOT NULL,
     created_at timestamp(3) DEFAULT NOW(),
     updated_at timestamp(3)
 );

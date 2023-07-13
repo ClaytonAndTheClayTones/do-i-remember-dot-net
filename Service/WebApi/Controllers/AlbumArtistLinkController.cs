@@ -7,6 +7,8 @@ using WebApi.Models.Common;
 using WebApi.Adapters.Common;
 using WebApi.Services;
 using FluentValidation;
+using FluentValidation.Results;
+using WebApi.Validators;
 
 [ApiController]
 [Route("[controller]")]
@@ -28,8 +30,13 @@ public class AlbumArtistLinksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(AlbumArtistLinkCreateRequest model)
     {
-        var results = this._albumArtistLinkValidator.Validate(model);
+        ValidationResult results = this._albumArtistLinkValidator.Validate(model);
 
+        if(!results.IsValid)
+        {
+            return StatusCode(400, new { Errors = results.Errors });
+        }
+         
         AlbumArtistLinkModel label = await _albumAlbumArtistLinkLinkService.Create(model);
 
         AlbumArtistLinkResponseModel responseAlbumArtistLink = _albumAlbumArtistLinkLinkAdapter.convertFromModelToResponseModel(label);
