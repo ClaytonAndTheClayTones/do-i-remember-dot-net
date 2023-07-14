@@ -4,7 +4,7 @@ using WebApi.Models.AlbumArtistLinks;
 using WebApi.Helpers;
 using WebApi.Adapters.Common;
 
-public interface IAlbumArtistLinkAdapter : IModelAdapter<AlbumArtistLinkCreateRequest, AlbumArtistLinkSearchRequest, AlbumArtistLinkDatabaseModel, AlbumArtistLinkModel, AlbumArtistLinkSearchModel, AlbumArtistLinkResponseModel> { }
+public interface IAlbumArtistLinkAdapter : IModelAdapter<AlbumArtistLinkCreateRequest, AlbumArtistLinkCreateModel, AlbumArtistLinkSearchRequest, AlbumArtistLinkDatabaseModel, AlbumArtistLinkModel, AlbumArtistLinkSearchModel, AlbumArtistLinkResponseModel> { }
   
 public class AlbumArtistLinkAdapter : IAlbumArtistLinkAdapter
 {
@@ -15,33 +15,6 @@ public class AlbumArtistLinkAdapter : IAlbumArtistLinkAdapter
         _commonUtils = commonUtils;
     }
 
-    public AlbumArtistLinkResponseModel convertFromModelToResponseModel(AlbumArtistLinkModel model)
-    {  
-        AlbumArtistLinkResponseModel responseModel = new AlbumArtistLinkResponseModel(
-            id: model.Id,
-            albumId: model.AlbumId,
-            artistId: model.ArtistId,
-
-            createdAt: model.CreatedAt.ToString("s"),
-            updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
-        );
-
-        return responseModel;
-    }
-
-    public AlbumArtistLinkModel convertFromDatabaseModelToModel(AlbumArtistLinkDatabaseModel model)
-    {
-        AlbumArtistLinkModel responseModel = new AlbumArtistLinkModel(
-            id: model.id,
-            albumId: model.album_id,
-            artistId: model.artist_id,
-
-            createdAt: model.created_at,
-            updatedAt: model.updated_at
-        );
-
-        return responseModel;
-    }
 
     public AlbumArtistLinkSearchModel convertFromRequestToSearchModel(AlbumArtistLinkSearchRequest request)
     {
@@ -97,5 +70,36 @@ public class AlbumArtistLinkAdapter : IAlbumArtistLinkAdapter
             album_id = Guid.Parse(model.AlbumId),
             artist_id = Guid.Parse(model.ArtistId) 
         };
-    } 
+    }
+
+
+    public AlbumArtistLinkModel convertFromDatabaseModelToModel(AlbumArtistLinkDatabaseModel model)
+    {
+        AlbumArtistLinkModel responseModel = new AlbumArtistLinkModel(
+            id: model.id,
+            albumId: model.album_id,
+            artistId: model.artist_id,
+
+            createdAt: model.created_at,
+            updatedAt: model.updated_at
+        );
+
+        return responseModel;
+    }
+
+
+    public AlbumArtistLinkResponseModel convertFromModelToResponseModel(AlbumArtistLinkModel model)
+    {
+        AlbumArtistLinkResponseModel responseModel = new AlbumArtistLinkResponseModel(
+            id: model.Id,
+            albumId: model.AlbumId,
+            artistId: model.ArtistId,
+
+            createdAt: model.CreatedAt.ToString("s"),
+            updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
+        );
+
+        return responseModel;
+    }
+
 }

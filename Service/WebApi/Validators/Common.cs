@@ -2,23 +2,35 @@ namespace WebApi.Validators.Common;
 
 public interface ICommonValidators
 {
-    public bool IsNullableGuid(object? value);
+    public bool IsGuid(object? value);
+    public bool IsDateOnly(object? value);
     public string GenerateErrorMessage(string propertyName, ErrorMessageTypes errorMessageType);
 }
 
 public enum ErrorMessageTypes
 {
     MissingRequiredField,
-    TypeError_Guid
+    TypeError_Guid,
+    TypeError_DateOnly
 }
 
 public class CommonValidators : ICommonValidators
 {
-    public bool IsNullableGuid(object? value)
+    public bool IsGuid(object? value)
     {
         if (value != null)
         {
             return Guid.TryParse(value.ToString(), out _);
+        }
+
+        else return true;
+    }
+
+    public bool IsDateOnly(object? value)
+    {
+        if (value != null)
+        {
+            return DateOnly.TryParse(value.ToString(), out _);
         }
 
         else return true;

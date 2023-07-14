@@ -1,14 +1,19 @@
 namespace WebApi.Models.AlbumArtistLinks;
-
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.Validators;
+ 
+using Microsoft.AspNetCore.Mvc; 
 
 public class AlbumArtistLinkCreateRequest
-{  
+{
     public string? AlbumId { get; set; }
- 
+
     public string? ArtistId { get; set; }
+}
+
+public class AlbumArtistLinkCreateModel
+{
+    public Guid? AlbumId { get; set; }
+
+    public Guid? ArtistId { get; set; }
 }
 
 [BindProperties]
@@ -19,9 +24,9 @@ public class AlbumArtistLinkSearchRequest
 
     [FromQuery]
     public string? AlbumIds { get; set; }
-     
+
     [FromQuery]
-    public string? ArtistIds { get; set; } 
+    public string? ArtistIds { get; set; }
 }
 
 public class AlbumArtistLinkSearchModel

@@ -4,7 +4,7 @@ using WebApi.Models.Locations;
 using WebApi.Helpers;
 using WebApi.Adapters.Common;
 
-public interface ILocationAdapter : IModelAdapter<LocationCreateRequest, LocationSearchRequest, LocationDatabaseModel, LocationModel, LocationSearchModel, LocationResponseModel>, IUpdateModelAdapter<LocationUpdateRequest> { }
+public interface ILocationAdapter : IModelAdapter<LocationCreateRequest, LocationCreateModel, LocationSearchRequest, LocationDatabaseModel, LocationModel, LocationSearchModel, LocationResponseModel>, IUpdateModelAdapter<LocationUpdateRequest, LocationUpdateModel> { }
 
 public class LocationAdapter : ILocationAdapter
 {
@@ -15,34 +15,16 @@ public class LocationAdapter : ILocationAdapter
         _commonUtils = commonUtils;
     }
 
-    public LocationResponseModel convertFromModelToResponseModel(LocationModel model)
+    public LocationCreateModel convertFromCreateRequestToCreateModel(LocationCreateRequest model)
     {
-        LocationResponseModel responseModel = new LocationResponseModel(
-            id: model.Id, 
-            city: model.City,
-            state: model.State,
-            createdAt: model.CreatedAt.ToString("s"),
-            updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
-        );
-
-        return responseModel;
+        return new LocationCreateModel()
+        {
+            City = model.City,
+            State = model.State
+        };
     }
 
-    public LocationModel convertFromDatabaseModelToModel(LocationDatabaseModel model)
-    {
-        LocationModel responseModel = new LocationModel(
-            id: model.id, 
-            city: model.city,
-            state: model.state,
-            createdAt: model.created_at,
-            updatedAt: model.updated_at
-        );
-
-        return responseModel;
-    }
-
-
-    public object convertFromCreateRequestToDatabaseModel(LocationCreateRequest model)
+    public object convertFromCreateModelToDatabaseModel(LocationCreateModel model)
     {
         return new
         {
@@ -51,7 +33,17 @@ public class LocationAdapter : ILocationAdapter
         };
     }
 
-    public object convertFromUpdateRequestToDatabaseModel(LocationUpdateRequest model)
+    public LocationUpdateModel convertFromUpdateRequestToUpdateModel(LocationUpdateRequest model)
+    {
+        return new LocationUpdateModel()
+        {
+            City = model.City,
+            State = model.State
+        };
+    }
+
+
+    public object convertFromUpdateModelToDatabaseModel(LocationUpdateModel model)
     {
         return new
         {
@@ -98,5 +90,31 @@ public class LocationAdapter : ILocationAdapter
         }
 
         return searchTerms;
+    } 
+
+    public LocationModel convertFromDatabaseModelToModel(LocationDatabaseModel model)
+    {
+        LocationModel responseModel = new LocationModel(
+            id: model.id,
+            city: model.city,
+            state: model.state,
+            createdAt: model.created_at,
+            updatedAt: model.updated_at
+        );
+
+        return responseModel;
     }
+     
+    public LocationResponseModel convertFromModelToResponseModel(LocationModel model)
+    {
+        LocationResponseModel responseModel = new LocationResponseModel(
+            id: model.Id,
+            city: model.City,
+            state: model.State,
+            createdAt: model.CreatedAt.ToString("s"),
+            updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
+        );
+
+        return responseModel;
+    } 
 }

@@ -4,7 +4,7 @@ using WebApi.Models.Albums;
 using WebApi.Helpers;
 using WebApi.Adapters.Common;
 
-public interface IAlbumAdapter : IModelAdapter<AlbumCreateRequest, AlbumSearchRequest, AlbumDatabaseModel, AlbumModel, AlbumSearchModel, AlbumResponseModel>, IUpdateModelAdapter<AlbumUpdateRequest> { }
+public interface IAlbumAdapter : IModelAdapter<AlbumCreateRequest, AlbumCreateModel, AlbumSearchRequest, AlbumDatabaseModel, AlbumModel, AlbumSearchModel, AlbumResponseModel>, IUpdateModelAdapter<AlbumUpdateRequest, AlbumUpdateModel> { }
   
 public class AlbumAdapter : IAlbumAdapter
 {
@@ -15,35 +15,29 @@ public class AlbumAdapter : IAlbumAdapter
         _commonUtils = commonUtils;
     }
 
-    public AlbumResponseModel convertFromModelToResponseModel(AlbumModel model)
-    { 
-        AlbumResponseModel responseModel = new AlbumResponseModel(
-            id: model.Id,
-            labelId: model.LabelId, 
-            name: model.Name,
-            dateReleased: model.DateReleased.ToString("O"), 
-            createdAt: model.CreatedAt.ToString("s"),
-            updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
-        );
+    public AlbumCreateModel convertFromCreateRequestToCreateModel(AlbumCreateRequest model)
+    {
+        return new AlbumCreateModel()
+        {
+            LabelId = model.LabelId != null ? Guid.Parse(model.LabelId) : null,
 
-        return responseModel;
+            Name = model.Name,
+            DateReleased = model.DateReleased != null ? DateOnly.Parse(model.DateReleased) : null
+        };
     }
 
-    public AlbumModel convertFromDatabaseModelToModel(AlbumDatabaseModel model)
-    { 
-        AlbumModel responseModel = new AlbumModel(
-            id: model.id,
-            labelId: model.label_id, 
-            name: model.name,
-            dateReleased: new DateOnly(model.date_released.Year, model.date_released.Month, model.date_released.Day),
-            createdAt: model.created_at,
-            updatedAt: model.updated_at
-        );
+    public AlbumUpdateModel convertFromUpdateRequestToUpdateModel(AlbumUpdateRequest model)
+    {
+        return new AlbumUpdateModel()
+        {
+            LabelId = model.LabelId != null ? Guid.Parse(model.LabelId) : null,
 
-        return responseModel;
-    }
+            Name = model.Name,
+            DateReleased = model.DateReleased != null ? DateOnly.Parse(model.DateReleased) : null
+        };
+    } 
 
-    public AlbumSearchModel convertFromRequestToSearchModel(AlbumSearchRequest request)
+    public AlbumSearchModel convertFromSearchRequestToSearchModel(AlbumSearchRequest request)
     {
         AlbumSearchModel result = new AlbumSearchModel();
 
@@ -56,13 +50,33 @@ public class AlbumAdapter : IAlbumAdapter
         {
             result.LabelIds = this._commonUtils.ConvertDelimitedStringToGuidList(request.LabelIds);
         }
-         
+
         result.NameLike = request.NameLike;
 
         result.DateReleasedMin = request.DateReleasedMin;
         result.DateReleasedMax = request.DateReleasedMax;
 
         return result;
+    }
+     
+    public object convertFromCreateModelToDatabaseModel(AlbumCreateModel model)
+    {
+        return new
+        {
+            label_id = model.LabelId,
+            name = model.Name,
+            date_released = model.DateReleased != null ? ((DateOnly)model.DateReleased).ToDateTime(TimeOnly.MinValue) : new DateTime(),
+        };
+    }
+
+    public object convertFromUpdateModelToDatabaseModel(AlbumUpdateModel model)
+    {
+        return new
+        {
+            label_id = model.LabelId,
+            name = model.Name,
+            date_released = model.DateReleased != null ? ((DateOnly)model.DateReleased).ToDateTime(TimeOnly.MinValue) : new DateTime(),
+        };
     }
 
     public List<ISearchTerm> convertFromSearchModelToSearchTerms(AlbumSearchModel? model)
@@ -98,23 +112,32 @@ public class AlbumAdapter : IAlbumAdapter
         return searchTerms;
     }
 
-    public object convertFromCreateRequestToDatabaseModel(AlbumCreateRequest model)
+    public AlbumModel convertFromDatabaseModelToModel(AlbumDatabaseModel model)
     {
-        return new
-        {
-            label_id = model.LabelId, 
-            name = model.Name,
-            date_released = model.DateReleased != null ? ((DateOnly)model.DateReleased).ToDateTime(TimeOnly.MinValue) : new DateTime()
-        };
+        AlbumModel responseModel = new AlbumModel(
+            id: model.id,
+            labelId: model.label_id,
+            name: model.name,
+            dateReleased: new DateOnly(model.date_released.Year, model.date_released.Month, model.date_released.Day),
+            createdAt: model.created_at,
+            updatedAt: model.updated_at
+        );
+
+        return responseModel;
     }
 
-    public object convertFromUpdateRequestToDatabaseModel(AlbumUpdateRequest model)
+    public AlbumResponseModel convertFromModelToResponseModel(AlbumModel model)
     {
-        return new
-        {
-            label_id = model.LabelId, 
-            name = model.Name,
-            date_released = model.DateReleased != null ? ((DateOnly)model.DateReleased).ToDateTime(TimeOnly.MinValue) : new DateTime(), 
-        };
+        AlbumResponseModel responseModel = new AlbumResponseModel(
+            id: model.Id,
+            labelId: model.LabelId,
+            name: model.Name,
+            dateReleased: model.DateReleased.ToString("O"),
+            createdAt: model.CreatedAt.ToString("s"),
+            updatedAt: model.UpdatedAt != null ? $"{model.UpdatedAt:s}" : null
+        );
+
+        return responseModel;
     }
+ 
 }

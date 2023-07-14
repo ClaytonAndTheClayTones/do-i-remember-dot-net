@@ -1,19 +1,30 @@
 namespace WebApi.Models.Locations;
- 
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc; 
+  
+using Microsoft.AspNetCore.Mvc;
 
 public class LocationCreateRequest
 { 
-    [Required]
     public string? City { get; set; }
-
-    [Required]
+     
     public string? State { get; set; }
 }
 
 public class LocationUpdateRequest
-{  
+{
+    public string? City { get; set; }
+
+    public string? State { get; set; }
+}
+
+public class LocationCreateModel
+{ 
+    public string? City { get; set; }
+     
+    public string? State { get; set; }
+}
+
+public class LocationUpdateModel
+{
     public string? City { get; set; }
 
     public string? State { get; set; }

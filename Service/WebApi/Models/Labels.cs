@@ -1,20 +1,33 @@
 namespace WebApi.Models.Labels;
  
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
 
 public class LabelCreateRequest
 {
-    public Guid? CurrentLocationId { get; set; }
+    public string? Name { get; set; }
 
-    [Required]
-    public string? Name { get; set; } 
+    public string? CurrentLocationId { get; set; }
 }
 
 public class LabelUpdateRequest
 {
     public string? Name { get; set; }
+
+    public string? CurrentLocationId { get; set; }
+}
+
+public class LabelCreateModel
+{
+    public Guid? CurrentLocationId { get; set; }
      
+    public string? Name { get; set; }
+}
+
+public class LabelUpdateModel
+{
+    public string? Name { get; set; }
+
     public Guid? CurrentLocationId { get; set; }
 }
 

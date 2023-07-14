@@ -5,20 +5,44 @@ using Microsoft.AspNetCore.Mvc;
 
 public class ArtistCreateRequest
 {
-    [Required]
+    public string? Name { get; set; }
+
+    public string? CurrentLocationId { get; set; }
+
+    public string? CurrentLabelId { get; set; }
+
+    public string? DateFounded { get; set; }
+
+    public string? DateDisbanded { get; set; }
+}
+
+public class ArtistUpdateRequest
+{
+    public string? Name { get; set; }
+
+    public string? CurrentLocationId { get; set; }
+
+    public string? CurrentLabelId { get; set; }
+
+    public string? DateFounded { get; set; }
+
+    public string? DateDisbanded { get; set; }
+}
+
+public class ArtistCreateModel
+{
     public string? Name { get; set; }
 
     public Guid? CurrentLocationId { get; set; }
 
     public Guid? CurrentLabelId { get; set; }
 
-    [Required]
     public DateOnly? DateFounded { get; set; }
-     
+
     public DateOnly? DateDisbanded { get; set; }
 }
 
-public class ArtistUpdateRequest
+public class ArtistUpdateModel
 {
     public string? Name { get; set; }
 

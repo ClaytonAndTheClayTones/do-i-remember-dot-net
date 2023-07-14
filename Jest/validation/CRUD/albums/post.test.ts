@@ -50,7 +50,7 @@ describe('Post Album Tests', () => {
 
   it('Gets errors for an invalid album', async () => {
     //just call with default values
-    const result = await qapost(context.url + "/albums", { DateReleased: "notADate"});
+    const result = await qapost(context.url + "/albums", { DateReleased: "notADate", LabelId: "not an id"});
     expect(result.status).toEqual(400);
  
     expect(Object.keys(result.data.errors).length).toEqual(2);

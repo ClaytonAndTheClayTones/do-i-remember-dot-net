@@ -1,26 +1,41 @@
 namespace WebApi.Models.Albums;
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
 public class AlbumCreateRequest
-{
-    [Required]
+{ 
     public string? Name { get; set; }
 
-    public Guid? LabelId { get; set; }
-
-    [Required]
-    public DateOnly? DateReleased { get; set; } 
+    public string? LabelId { get; set; }
+     
+    public string? DateReleased { get; set; }
 }
 
 public class AlbumUpdateRequest
 {
-    public string? Name { get; set; } 
+    public string? Name { get; set; }
+
+    public string? LabelId { get; set; }
+
+    public string? DateReleased { get; set; }
+}
+ 
+public class AlbumCreateModel
+{ 
+    public string? Name { get; set; }
+
+    public Guid? LabelId { get; set; }
+     
+    public DateOnly? DateReleased { get; set; }
+}
+
+public class AlbumUpdateModel
+{
+    public string? Name { get; set; }
 
     public Guid? LabelId { get; set; }
 
-    public DateOnly? DateReleased { get; set; } 
+    public DateOnly? DateReleased { get; set; }
 }
 
 [BindProperties]

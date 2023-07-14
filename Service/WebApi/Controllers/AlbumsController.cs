@@ -6,6 +6,8 @@ using WebApi.Adapters.AlbumAdapter;
 using WebApi.Models.Common;
 using WebApi.Adapters.Common;
 using WebApi.Services;
+using FluentValidation;
+using FluentValidation.Results;
 
 [ApiController]
 [Route("[controller]")]
@@ -14,17 +16,27 @@ public class AlbumsController : ControllerBase
     private IAlbumService _albumService;
     private IAlbumAdapter _albumAdapter;
     private IPagingAdapter _pagingAdapter;
+    private IValidator<AlbumCreateRequest> _albumValidator;
 
-    public AlbumsController(IAlbumService labelService, IAlbumAdapter labelAdapter, IPagingAdapter pagingAdapter)
+
+    public AlbumsController(IValidator<AlbumCreateRequest> albumValidator, IAlbumService labelService, IAlbumAdapter labelAdapter, IPagingAdapter pagingAdapter)
     {
         _albumService = labelService;
         _albumAdapter = labelAdapter;
         _pagingAdapter = pagingAdapter;
+        _albumValidator = albumValidator;
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(AlbumCreateRequest model)
     {
+        ValidationResult results = this._albumValidator.Validate(model);
+
+        if (!results.IsValid)
+        {
+            return StatusCode(400, new { Errors = results.Errors });
+        }
+
         AlbumModel label = await _albumService.Create(model);
 
         AlbumResponseModel responseAlbum = _albumAdapter.convertFromModelToResponseModel(label);
